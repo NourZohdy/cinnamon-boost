@@ -7,7 +7,7 @@ const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(entry => 
   return /\.(?:js|mjs)$/.test(entry.name) ? [join(dir, entry.name)] : [];
 });
 const checks = files('.').sort();
-const suites = readdirSync('.').filter(name => /^test_.*\.mjs$/.test(name)).sort();
+const suites = readdirSync('tests').filter(name => /^test_.*\.mjs$/.test(name)).sort().map(name => join('tests', name));
 let failures = 0;
 function run(label, args) {
   console.log(`\n> ${label}`);

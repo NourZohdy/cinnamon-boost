@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { fakeLS } from './test-support/fake-ls.mjs';
 
-const { PRESETS } = createRequire(import.meta.url)('./settings.js');
+const { PRESETS } = createRequire(import.meta.url)('../settings.js');
 const url = 'https://annotation.dlnlp.ai/cinnamon/projects/19/data';
 const taskUrl = '/cinnamon/api/tasks/2', userUrl = '/cinnamon/api/current-user/whoami';
 const patchUrl = '/cinnamon/api/annotations/12/';

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { fakeLS } from './test-support/fake-ls.mjs';
 import { createRequire } from 'node:module';
-const { PRESETS } = createRequire(import.meta.url)('./settings.js');
+const { PRESETS } = createRequire(import.meta.url)('../settings.js');
 
 for (const key of ['sound', 'cache', 'compact', 'pager', 'preview', 'gestures', 'segmentKeys', 'taskKeys', 'preload']) {
   const f = fakeLS({ settings: { [key]: key === 'preload' ? 0 : false } });

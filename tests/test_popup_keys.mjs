@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { setImmediate } from 'node:timers/promises';
 import { JSDOM } from 'jsdom';
 
-const read = file => readFileSync(new URL(file, import.meta.url), 'utf8');
+const read = file => readFileSync(new URL('../' + file, import.meta.url), 'utf8');
 const { window: w } = new JSDOM(read('popup.html'), { runScripts: 'outside-only' });
 const storageKey = 'soundOnly.settings';
 const writes = [];

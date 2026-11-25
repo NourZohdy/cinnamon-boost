@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
-const { DEFAULTS, PRESETS, normalizeSettings, migrateSettings, matchPreset, applyPreset } = require('./settings.js');
+const { DEFAULTS, PRESETS, normalizeSettings, migrateSettings, matchPreset, applyPreset } = require('../settings.js');
 
 assert.deepEqual(normalizeSettings(null), DEFAULTS);
 assert.deepEqual(normalizeSettings({ sound: false, cache: 0, preload: 9, unknown: true }), { ...DEFAULTS, sound: false, preload: 3 });

@@ -1,7 +1,7 @@
 // Compact layout, phase 2 helpers. Run: node test_questions.mjs (written by Claude)
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-const { cardOf, noteReason } = createRequire(import.meta.url)('./content.js');
+const { cardOf, noteReason } = createRequire(import.meta.url)('../content.js');
 
 let n = 0;
 const test = (name, fn) => { fn(); n++; console.log('ok -', name); };
@@ -46,7 +46,7 @@ test('noteReason: why the transcription is missing, or nothing', () => {
 
 
 test('sideNote: the right-column line for each left note', () => {
-  const { sideNote } = createRequire(import.meta.url)('./content.js');
+  const { sideNote } = createRequire(import.meta.url)('../content.js');
   assert.equal(sideNote(''), '');
   assert.equal(sideNote('Video skipped: nothing to transcribe.'), 'The wave, segments and questions are hidden while the whole video is skipped.');
   assert.equal(sideNote('Segment skipped: no transcription needed.'), 'Gender, dialect, transcription and code-switching are not asked for a skipped segment.');
@@ -54,7 +54,7 @@ test('sideNote: the right-column line for each left note', () => {
 });
 
 test('clampSpeed: slider range 0.5-3 in 0.25 steps, bad input = 1', () => {
-  const { clampSpeed } = createRequire(import.meta.url)('./content.js');
+  const { clampSpeed } = createRequire(import.meta.url)('../content.js');
   assert.equal(clampSpeed(1.25), 1.25);
   assert.equal(clampSpeed(1.1), 1);
   assert.equal(clampSpeed(9), 3);

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { mediaKey, captureBlob, hookResponse, swapWhenPaused } = require('./content.js');
+const { mediaKey, captureBlob, hookResponse, swapWhenPaused } = require('../content.js');
 
 let n = 0;
 const test = async (name, fn) => { await fn(); n++; console.log('ok -', name); };

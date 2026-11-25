@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 for (const file of ['popup.css', 'content.css']) {
-  readFileSync(new URL(file, import.meta.url), 'utf8').split(/\r?\n/).forEach((line, i) => {
+  readFileSync(new URL('../' + file, import.meta.url), 'utf8').split(/\r?\n/).forEach((line, i) => {
     if (!line.includes('{') || line.trimStart().startsWith('@')) return;
     const selector = line.slice(0, line.indexOf('{')).replace(/\[[^\]]*\]/g, '[]');   // attribute values like [style*="display: none"] are fine
     assert.doesNotMatch(selector, /[\w\])]: +[a-z-]+/, `${file}:${i + 1} has a space after a pseudo-class colon: ${selector.trim()}`);

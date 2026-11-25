@@ -89,7 +89,7 @@ For development, load the repository folder itself with **Load unpacked**. In a 
 | `popup.*` | Settings popup |
 | `INSTALL.html`, `install/`, `update.cmd` | Annotator guide and one-click updater, shipped in the zip |
 | `scripts/` | Test runner, packager, icon generator |
-| `test_*.mjs`, `test-support/` | Tests (plain Node + jsdom, with a fake Label Studio) |
+| `tests/` | Tests (plain Node + jsdom, with a fake Label Studio in `tests/test-support/`) |
 
 ### Releasing a new version
 

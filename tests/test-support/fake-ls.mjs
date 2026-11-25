@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { JSDOM, VirtualConsole } from 'jsdom';
 
-const manifest = JSON.parse(readFileSync(new URL('../manifest.json', import.meta.url), 'utf8'));
-const sources = manifest.content_scripts.filter(script => script.world === 'MAIN').flatMap(script => script.js).map(path => readFileSync(new URL('../' + path, import.meta.url), 'utf8'));
+const manifest = JSON.parse(readFileSync(new URL('../../manifest.json', import.meta.url), 'utf8'));
+const sources = manifest.content_scripts.filter(script => script.world === 'MAIN').flatMap(script => script.js).map(path => readFileSync(new URL('../../' + path, import.meta.url), 'utf8'));
 export const mediaUrl = '/data/local-files/?d=sample.mp4';
 
 export function fakeLS({ settings, mode = 'full', layout = 'compact', cacheEntries = [], holdCache = false, mountedAtReady = false, onEarly = () => {}, allowedNativeUrls = [], initialRoutes = [], url = 'https://annotation.dlnlp.ai/label' } = {}) {

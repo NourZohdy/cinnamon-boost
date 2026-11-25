@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { fakeLS } from './test-support/fake-ls.mjs';
-const { cacheRequestUrl, keysToEvict, pickNextTask, mediaKey, reusePreloadedWaveform, preferLocalMedia } = createRequire(import.meta.url)('./content.js');
+const { cacheRequestUrl, keysToEvict, pickNextTask, mediaKey, reusePreloadedWaveform, preferLocalMedia } = createRequire(import.meta.url)('../content.js');
 
 let n = 0;
 const test = (name, fn) => { fn(); n++; console.log('ok -', name); };

@@ -2,7 +2,7 @@
 import vm from 'node:vm';
 import { setImmediate } from 'node:timers';
 import assert from 'node:assert/strict';
-import { disableDevReload } from './scripts/package.mjs';
+import { disableDevReload } from '../scripts/package.mjs';
 const source = readFileSync('reload.js', 'utf8');
 const updateKey = 'soundOnly.update';
 const update = { checkedAt: 1, latest: '0.33.0', url: 'https://github.com/NourZohdy/ls-sound-only/releases/latest', newer: true };

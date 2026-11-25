@@ -3,12 +3,12 @@ import { readFileSync } from 'node:fs';
 import { setImmediate } from 'node:timers/promises';
 import vm from 'node:vm';
 import { JSDOM } from 'jsdom';
-import update from './update.js';
-import { disableDevReload } from './scripts/package.mjs';
+import update from '../update.js';
+import { disableDevReload } from '../scripts/package.mjs';
 import { fakeLS } from './test-support/fake-ls.mjs';
 
 const { UPDATE_KEY, isNewer, releaseUrl } = update;
-const read = file => readFileSync(new URL(file, import.meta.url), 'utf8');
+const read = file => readFileSync(new URL('../' + file, import.meta.url), 'utf8');
 const current = JSON.parse(read('manifest.json')).version;
 const latest = '0.33.0';
 const releases = 'https://github.com/NourZohdy/ls-sound-only/releases/';
