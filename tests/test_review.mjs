@@ -38,8 +38,8 @@ await test('task A position is not put on task B when LS swaps the file mid-swap
   assert.equal(Object.hasOwn(el, 'currentTime'), false, 'guard removed');
   assert.equal(Object.hasOwn(el, 'duration'), false, 'guard removed');
   assert.equal(el.currentTime, 0, 'B keeps its own position');
-  assert.equal(el.dataset.soundOnlyLocal, undefined);
-  assert.equal(el.dataset.soundOnlySwap, undefined);
+  assert.equal(el.dataset.boostLocal, undefined);
+  assert.equal(el.dataset.boostSwap, undefined);
 });
 
 await test('a late error from task B never restores task A\'s file', () => {
@@ -48,7 +48,7 @@ await test('a late error from task B never restores task A\'s file', () => {
   el.src = 'https://server/b.mp4';
   el.dispatchEvent(new Event('error'));
   assert.equal(el.src, 'https://server/b.mp4');
-  assert.equal(el.dataset.soundOnlyFailed, undefined);
+  assert.equal(el.dataset.boostFailed, undefined);
   assert.equal(Object.hasOwn(el, 'currentTime'), false);
 });
 
@@ -61,8 +61,8 @@ await test('stale blob metadata does not apply the previous task position after 
   el.dispatchEvent(new Event('loadedmetadata'));
   assert.equal(el.currentTime, 0);
   assert.equal(el.playbackRate, 1);
-  assert.equal(el.dataset.soundOnlyLocal, undefined);
-  assert.equal(el.dataset.soundOnlySwap, undefined);
+  assert.equal(el.dataset.boostLocal, undefined);
+  assert.equal(el.dataset.boostSwap, undefined);
 });
 
 await test('after a fallback, a later error does not rewind the player', () => {

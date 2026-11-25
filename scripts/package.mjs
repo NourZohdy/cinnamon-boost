@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { JSDOM } from 'jsdom';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-export const zipName = 'ls-sound-only.zip';
+export const zipName = 'cinnamon-boost.zip';
 
 function requireFile(directory, file) {
   const path = resolve(directory, file);
@@ -30,7 +30,7 @@ export function buildFileList(directory, manifest) {
     const popup = new JSDOM(readFileSync(requireFile(directory, action.default_popup), 'utf8'), {
       url: new URL(action.default_popup, origin).href,
     });
-    for (const element of popup.window.document.querySelectorAll('script[src], link[href]')) {
+    for (const element of popup.window.document.querySelectorAll('script[src], link[href], img[src]')) {
       const url = new URL(element.src ?? element.href);
       if (url.origin !== origin) throw new Error(`Popup resource is outside the extension: ${url.href}`);
       files.add(decodeURIComponent(url.pathname.slice(1)));
@@ -54,7 +54,7 @@ function main() {
   const background = manifest.background.service_worker;
   const releaseWorker = disableDevReload(readFileSync(join(directory, background), 'utf8'));
   const dist = join(directory, 'dist');
-  const unpacked = join(dist, 'ls-sound-only');
+  const unpacked = join(dist, 'cinnamon-boost');
   const zip = join(dist, zipName);
   for (const path of [dist, unpacked]) {
     if (existsSync(path) && relative(path, realpathSync(path)) !== '') {
@@ -73,7 +73,7 @@ function main() {
   const result = spawnSync(tar, ['-a', '-c', '-f', zip, '-C', unpacked, '.'], { stdio: 'inherit' });
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(`tar failed (${result.signal ?? result.status})`);
-  console.log(`LS Sound only ${manifest.version}: ${relative(directory, zip)} (${statSync(zip).size} bytes)`);
+  console.log(`Cinnamon Boost ${manifest.version}: ${relative(directory, zip)} (${statSync(zip).size} bytes)`);
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

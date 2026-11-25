@@ -3,16 +3,16 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = require('./helpers.js');
 } else {
   (() => {
-    const ctx = window.LSSoundOnly.ctx = window.LSSoundOnly.createContext();
+    const ctx = window.CinnamonBoost.ctx = window.CinnamonBoost.createContext();
     if (ctx.mode === 'off') return;
     const { document } = ctx;
-    if (ctx.settings.cache) ctx.cache = window.LSSoundOnly.features.cache.start(ctx);
+    if (ctx.settings.cache) ctx.cache = window.CinnamonBoost.features.cache.start(ctx);
     function startUI() {
       const s = ctx.settings;
       document.body.classList.toggle('so-f-preview', s.preview);
       document.body.classList.toggle('so-f-segmentkeys', s.segmentKeys);
       const enabled = { preload: (s.cache && s.preload > 0) || s.pager || s.taskKeys || s.nextAfterSubmit, toolbar: true, sound: s.sound, layout: s.compact, segments: s.compact, pager: true, gestures: s.gestures, overview: s.preview, keyboard: true };
-      for (const name of Object.keys(enabled)) if (enabled[name]) ctx[name] = window.LSSoundOnly.features[name].start(ctx);
+      for (const name of Object.keys(enabled)) if (enabled[name]) ctx[name] = window.CinnamonBoost.features[name].start(ctx);
       if (ctx.sound) {
         ctx.toolbar.bar.insertBefore(ctx.sound.loopBtn, ctx.gestures ? ctx.toolbar.bar.lastElementChild : null);
         ctx.toolbar.bar.append(ctx.sound.speedSeg);

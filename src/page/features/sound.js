@@ -1,6 +1,6 @@
 (() => {
-  const { checkShape, mediaKey, ICON, untie, retie, clampSpeed, installSeekFilter, skipTinySeeks } = window.LSSoundOnly.helpers;
-  window.LSSoundOnly.features.sound = { start(ctx) {
+  const { checkShape, mediaKey, ICON, untie, retie, clampSpeed, installSeekFilter, skipTinySeeks } = window.CinnamonBoost.helpers;
+  window.CinnamonBoost.features.sound = { start(ctx) {
     const { window, document, editing } = ctx;
     const { bar } = ctx.toolbar;
     let warned = false, pending = false, stuck = false;
@@ -22,7 +22,7 @@
       if (!videoObj || videoObj.syncManager !== sm || !video || !audio ||
           !checkShape(sm, audioObj.name, videoObj.name) ||
           sm.syncTargets.get(audioObj.name) !== audioObj ||
-          (sm.syncTargets.get(videoObj.name) || sm.__soundOnly?.removed.get(videoObj.name)) !== videoObj) {
+          (sm.syncTargets.get(videoObj.name) || sm.__cinnamonBoost?.removed.get(videoObj.name)) !== videoObj) {
         return { status: 'bad' };
       }
       return { status: 'ok', sm, video, audio, audioName: audioObj.name };
@@ -38,11 +38,11 @@
         button.title = 'The audio and video sync setup is unavailable or unsupported.';
         button.setAttribute('aria-pressed', 'false');
         if (!warned) {
-          console.warn('[sound-only] Unsupported audio/video sync setup');
+          console.warn('[Cinnamon Boost] Unsupported audio/video sync setup');
           warned = true;
         }
       } else if (binding.status === 'ok') {
-        const on = !!binding.sm.__soundOnly;
+        const on = !!binding.sm.__cinnamonBoost;
         const label = pending ? 'Picture catching up…' : on && stuck ? 'Picture stuck – retry' : 'Speed mode';
         if (button.dataset.label !== label) {
           button.dataset.label = label;
@@ -79,7 +79,7 @@
       const binding = findBinding();
       if (binding.status !== 'ok' || pending) return;
       const { sm, video, audio } = binding;
-      const state = sm.__soundOnly;
+      const state = sm.__cinnamonBoost;
       if (!state) {
         if (untie(sm, binding.audioName)) video.pause();
         stuck = false;

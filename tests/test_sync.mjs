@@ -5,7 +5,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { untie, retie, checkShape } = require('../src/page/content.js');
 
-// Fake of Label Studio's shared syncManager (see .feature/sound-only/facts.md).
+// Fake of Label Studio's shared syncManager.
 class FakeSM {
   constructor(targets) {
     this.syncTargets = new Map(targets.map(t => [t.name, t]));
@@ -38,7 +38,8 @@ test('untie removes video, keeps audio, stores state', () => {
   const s = untie(sm, 'audio');
   assert.ok(s);
   assert.deepEqual([...sm.syncTargets.keys()], ['audio']);
-  assert.equal(sm.__soundOnly, s);
+  assert.equal(sm.__cinnamonBoost, s);
+  assert.equal(sm.sync.__cinnamonBoost, true);
   assert.equal(s.active, true);
 });
 
@@ -95,7 +96,7 @@ test('retie restores exact order, removes wrapper, events flow both ways', () =>
   retie(sm, s);
   assert.deepEqual([...sm.syncTargets.keys()], ['video', 'audio']);
   assert.equal(Object.hasOwn(sm, 'sync'), false);
-  assert.equal('__soundOnly' in sm, false);
+  assert.equal('__cinnamonBoost' in sm, false);
   assert.equal(s.active, false);
   sm.sync({}, 'seek', 'audio'); sm.locked = null;
   sm.sync({}, 'pause', 'video');
@@ -142,7 +143,7 @@ test('retie with nothing saved or a stale state is a no-op', () => {
   const s = untie(sm, 'audio');
   retie(sm, { order: ['video', 'audio'], removed: new Map(), active: true });
   assert.deepEqual([...sm.syncTargets.keys()], ['audio']);
-  assert.equal(sm.__soundOnly, s);
+  assert.equal(sm.__cinnamonBoost, s);
 });
 
 test('checkShape accepts exactly the audio+video pair', () => {

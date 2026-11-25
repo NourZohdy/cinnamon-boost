@@ -8,7 +8,7 @@ for (const key of ['sound', 'cache', 'compact', 'pager', 'preview', 'gestures', 
   f.advance(1500);
   await f.flush();
   assert.deepEqual(f.errors, [], key);
-  const ctx = f.w.LSSoundOnly.ctx;
+  const ctx = f.w.CinnamonBoost.ctx;
   if (key === 'sound') assert.equal(ctx.sound, null);
   if (key === 'cache') assert.equal(ctx.cache, null);
   if (key === 'compact') assert.equal(ctx.layout, null);
@@ -33,8 +33,8 @@ for (const key of ['sound', 'cache', 'compact', 'pager', 'preview', 'gestures', 
   f.dom.window.close();
 }
 const off = fakeLS({ settings: PRESETS.off });
-assert.equal(off.w.LSSoundOnly.ctx.mode, 'off');
-assert.equal(off.w.LSSoundOnly.ctx.cache, null);
+assert.equal(off.w.CinnamonBoost.ctx.mode, 'off');
+assert.equal(off.w.CinnamonBoost.ctx.cache, null);
 assert.equal(off.d.querySelector('.so-bar'), null);
 assert.match(String(off.w.XMLHttpRequest.prototype.open), /this\.method/);
 off.dom.window.close();
@@ -45,14 +45,14 @@ const discovery = fakeLS({
   initialRoutes: [[listUrl, () => ({ ok: true, json: async () => ({ tasks: [1, 2, 3].map(id => ({ id, data: { video: `/media/${id}.mp4` } })) }) })]],
 });
 await discovery.flush();
-assert.equal(discovery.w.LSSoundOnly.ctx.preload.tasksById.size, 3);
+assert.equal(discovery.w.CinnamonBoost.ctx.preload.tasksById.size, 3);
 assert.equal(discovery.network.some(request => request.includes('/media/')), false);
 discovery.dom.window.close();
 const noPreload = fakeLS({ settings: { preload: 0 }, url: 'https://annotation.dlnlp.ai/projects/19/data',
   initialRoutes: [[listUrl, () => ({ ok: true, json: async () => ({ tasks: [1, 2, 3].map(id => ({ id, data: { video: `/media/${id}.mp4` } })) }) })]],
 });
 await noPreload.flush();
-assert.equal(noPreload.w.LSSoundOnly.ctx.preload.tasksById.size, 3);
+assert.equal(noPreload.w.CinnamonBoost.ctx.preload.tasksById.size, 3);
 assert.equal(noPreload.network.some(request => request.includes('/media/')), false);
 noPreload.dom.window.close();
 console.log('switch tests passed');

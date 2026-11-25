@@ -1,6 +1,6 @@
 (() => {
-  const { svg, shortTime, segmentState, pageTime } = window.LSSoundOnly.helpers;
-  window.LSSoundOnly.features.segments = { start(ctx) {
+  const { svg, shortTime, segmentState, pageTime } = window.CinnamonBoost.helpers;
+  window.CinnamonBoost.features.segments = { start(ctx) {
     const { window, document, editing, currentTaskId } = ctx;
     let playAll = null;
     const segs=document.createElement('div'); segs.className='so-segs';
@@ -61,7 +61,7 @@
           item.classList.add('so-segs-confirm');
           const q=document.createElement('span'); q.className='so-segs-ask'; q.textContent=`Delete segment ${i+1}?`;
           const yes=document.createElement('button'); yes.type='button'; yes.className='so-segs-nav so-segs-yes'; yes.textContent='Delete';
-          yes.addEventListener('click',()=>{ confirmId=null; try { r.deleteRegion(); } catch (e) { console.warn('[sound-only] delete failed', e); } segmentKey=''; ctx.layout.syncLayout(); });
+          yes.addEventListener('click',()=>{ confirmId=null; try { r.deleteRegion(); } catch (e) { console.warn('[Cinnamon Boost] delete failed', e); } segmentKey=''; ctx.layout.syncLayout(); });
           const no=document.createElement('button'); no.type='button'; no.className='so-segs-nav so-segs-no'; no.textContent='Cancel'; no.addEventListener('click',()=>ask(null));
           item.append(q,yes,no);
         } else {

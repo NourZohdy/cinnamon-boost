@@ -1,6 +1,6 @@
 (() => {
-  const { mediaKey, isMediaType } = window.LSSoundOnly.helpers;
-  window.LSSoundOnly.features.preload = { start(ctx) {
+  const { mediaKey, isMediaType } = window.CinnamonBoost.helpers;
+  window.CinnamonBoost.features.preload = { start(ctx) {
     const { window, currentTaskId } = ctx;
     const tasksById = new Map(), preloads = new Map(), progressByKey = new Map(), failedKeys = new Set();
     let orderedTasks = [], taskListScope;
@@ -54,7 +54,7 @@
         } catch (error) {
           if (!controller.signal.aborted) {
             failedKeys.add(key);
-            console.warn('[sound-only] preload failed', error);
+            console.warn('[Cinnamon Boost] preload failed', error);
           }
           return null;
         } finally {
@@ -121,7 +121,7 @@
           }
         }
       } catch (e) {
-        console.warn('[sound-only] preload failed',e);
+        console.warn('[Cinnamon Boost] preload failed',e);
         if (live()) ctx.toolbar.setNext('error','\u2715','Could not download the next task; it will load normally');
       }
     }

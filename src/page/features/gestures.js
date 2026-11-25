@@ -1,6 +1,6 @@
 (() => {
-  const { lengthText } = window.LSSoundOnly.helpers;
-  window.LSSoundOnly.features.gestures = { start(ctx) {
+  const { lengthText } = window.CinnamonBoost.helpers;
+  window.CinnamonBoost.features.gestures = { start(ctx) {
     const { window, document, editing } = ctx;
     // Clear: closes the open segment (same as Esc) and removes the grey wave highlight that a drag
     // leaves when it is not made into a segment (LS keeps it as a non-region 'segment'). Never deletes a segment.
@@ -148,7 +148,7 @@
             if (!label.selected) label.setSelected(true);
             const region = tag.addRegion(h);
             created ||= region;
-          } catch (err) { console.warn('[sound-only] make segment failed', err); }
+          } catch (err) { console.warn('[Cinnamon Boost] make segment failed', err); }
         }
       } finally {
         if (label.selected !== was) {

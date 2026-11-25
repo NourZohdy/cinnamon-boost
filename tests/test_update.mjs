@@ -12,14 +12,20 @@ const read = file => readFileSync(new URL('../' + file, import.meta.url), 'utf8'
 const manifest = JSON.parse(read('manifest.json'));
 const current = manifest.version;
 const extensionRoot = 'chrome-extension://abcdefghijklmnopqrstuvwxyzabcdef/';
-const latest = '0.33.0';
-const releases = 'https://github.com/NourZohdy/ls-sound-only/releases/';
+const latest = `${current}.1`;
+const releases = 'https://github.com/NourZohdy/cinnamon-boost/releases/';
 const tagged = releases + 'tag/v' + latest;
 const fallback = releases + 'latest';
-const hostile = 'https://github.com.evil.invalid/NourZohdy/ls-sound-only/releases/latest';
+const legacyRelease = 'https://github.com/NourZohdy/ls-sound-only/releases/tag/v' + latest;
+const hostile = 'https://github.com.evil.invalid/NourZohdy/cinnamon-boost/releases/latest';
 const available = { latest, newer: true, url: tagged };
 const hour = 60 * 60 * 1000;
 
+assert.equal(manifest.name, 'Cinnamon Boost');
+assert.equal(manifest.homepage_url, 'https://github.com/NourZohdy/cinnamon-boost');
+assert.equal(UPDATE_KEY, 'soundOnly.update');
+assert.equal(manifest.author, 'Nour Tammous');
+assert.equal(manifest.action.default_title, 'Cinnamon Boost: settings');
 assert.equal(isNewer('0.32.0', '0.31.1'), true);
 assert.equal(isNewer('0.31.10', '0.31.9'), true);
 assert.equal(isNewer('0.31.9', '0.31.10'), false);
@@ -98,7 +104,7 @@ assert.deepEqual(worker.badge, ['']);
 worker.installed();
 assert.deepEqual(await worker.check(), { ...available, checkedAt: 0 });
 assert.deepEqual(worker.fetches, [{
-  url: 'https://api.github.com/repos/NourZohdy/ls-sound-only/releases/latest', accept: 'application/vnd.github+json',
+  url: 'https://api.github.com/repos/NourZohdy/cinnamon-boost/releases/latest', accept: 'application/vnd.github+json',
 }]);
 assert.deepEqual(worker.timeouts, [15000]);
 assert.equal(worker.badge.at(-1), 'NEW');
@@ -146,6 +152,7 @@ for (const [layout, pagerEnabled] of [['compact', true], ['compact', false], ['o
   assert.equal(button.parentElement, pager ?? bar);
   assert.ok(bar.closest(layout === 'compact' ? '.lsf-audio-tag' : '.lsf-video-segmentation'));
   assert.equal(button.textContent, 'Update ' + latest);
+  assert.equal(button.title, 'A new version of Cinnamon Boost is available. Click to see how to update.');
   assert.equal(button.hidden, false);
   if (pager) {
     const row = pager.querySelector('.so-pager-row');
@@ -207,7 +214,33 @@ for (const script of popup.document.querySelectorAll('script[src]')) {
 }
 await setImmediate();
 const byId = id => popup.document.getElementById(id);
+assert.equal(popup.document.title, 'Cinnamon Boost settings');
+assert.equal(popup.document.querySelector('header strong').textContent.trim(), 'Cinnamon Boost');
+assert.equal(byId('version').textContent, `v${current}`);
+const about = popup.document.querySelector('footer details');
+const summary = about.firstElementChild;
+assert.equal(summary.localName, 'summary');
+assert.equal(summary.textContent, `v${current} · About`);
+assert.equal(about.open, false);
+summary.click();
+assert.equal(about.open, true);
+const panel = about.querySelector('.about-panel');
+assert.equal(panel.querySelector('strong').textContent.trim(), `Cinnamon Boost v${current}`);
+const logo = panel.querySelector('img');
+assert.equal(logo.src, new URL('../icons/logo.svg', import.meta.url).href);
+assert.equal(logo.width, 24);
+assert.equal(logo.height, 24);
+assert.equal(panel.querySelector('p').textContent, 'Made by Nour Tammous');
+const repoLink = panel.querySelector('a');
+assert.equal(repoLink.textContent, 'github.com/NourZohdy/cinnamon-boost');
+assert.equal(repoLink.href, 'https://github.com/NourZohdy/cinnamon-boost');
+assert.equal(repoLink.target, '_blank');
+assert.equal(repoLink.rel, 'noopener');
+summary.click();
+assert.equal(about.open, false);
+assert.equal(byId('check-update').textContent, 'Check for updates');
 assert.equal(byId('update-banner').hidden, false);
+assert.match(byId('update-banner').querySelector('li').textContent, /your cinnamon-boost folder/);
 assert.equal(byId('update-version').textContent, `Version ${latest} is available (you have ${current}).`);
 assert.equal(byId('release-link').href, tagged);
 assert.equal(byId('release-link').rel, 'noopener');
@@ -225,6 +258,9 @@ for (const [record, status, hidden] of [
   assert.equal(byId('update-result').textContent, status);
   assert.equal(byId('update-banner').hidden, hidden);
 }
+assert.equal(byId('release-link').href, fallback);
+onChanged({ [UPDATE_KEY]: { newValue: { ...available, url: legacyRelease } } }, 'local');
+assert.equal(byId('update-banner').hidden, false);
 assert.equal(byId('release-link').href, fallback);
 onChanged({ [UPDATE_KEY]: { newValue: { ...available, latest: current } } }, 'local');
 assert.equal(byId('update-banner').hidden, true);

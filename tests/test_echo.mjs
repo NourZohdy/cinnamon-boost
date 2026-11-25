@@ -34,7 +34,7 @@ test('only seek events with a time are considered', () => {
   assert.equal(isEchoSeek('seek', { time: 10.1 }, 'audio', T, timeOf), false);     // 100 ms is a real move
 });
 
-test('the filter blocks echoes, forwards the rest, and survives Sound only on/off', () => {
+test('the filter blocks echoes, forwards the rest, and survives toggling the Cinnamon Boost sound feature', () => {
   const audio = tag('audio', 'audio', 57.75), video = tag('video', 'video', 57.75);
   const sm = new FakeSM([video, audio]);
   assert.equal(installSeekFilter(sm, timeOf), true);
@@ -48,7 +48,7 @@ test('the filter blocks echoes, forwards the rest, and survives Sound only on/of
   const filter = sm.sync;
   const s = untie(sm, 'audio');
   retie(sm, s);
-  assert.equal(sm.sync, filter);                                                    // Sound only keeps the filter
+  assert.equal(sm.sync, filter); // The sound feature keeps the filter.
   assert.equal(sm.sync({ time: 57.751 }, 'seek', 'video'), false);
 });
 

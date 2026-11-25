@@ -1,5 +1,5 @@
 (() => {
-  const ns = window.LSSoundOnly;
+  const ns = window.CinnamonBoost;
   ns.createScheduler = (beforePass = () => {}) => {
     const tick = new Map(), poll = new Map(), frame = new Map();
     const register = slots => (slot, fn) => {

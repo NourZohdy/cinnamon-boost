@@ -1,7 +1,7 @@
 (() => {
-  const { svg, readPref, writePref, classifyHeader, cardOf, noteReason, sideNote, fixedSlot } = window.LSSoundOnly.helpers;
-  const { bindingLabel } = window.LSSoundOnly.settings;
-  window.LSSoundOnly.features.layout = { start(ctx) {
+  const { svg, readPref, writePref, classifyHeader, cardOf, noteReason, sideNote, fixedSlot } = window.CinnamonBoost.helpers;
+  const { bindingLabel } = window.CinnamonBoost.settings;
+  window.CinnamonBoost.features.layout = { start(ctx) {
     const { window, document } = ctx;
     const MODE = ctx.mode;
     const { place, setGeometry } = ctx.toolbar;
@@ -62,7 +62,7 @@
       const valid=!!(root && audio && row && vcol && acol);
       // The editor mounts and unmounts its players during startup and task changes.
       if (layout === 'compact' && audio && video && !valid && !structureWarned) {
-        console.warn('[sound-only] compact layout: unknown page structure');
+        console.warn('[Cinnamon Boost] compact layout: unknown page structure');
         structureWarned = true;
       }
       const compact=layout==='compact' && valid, tags=new Map();

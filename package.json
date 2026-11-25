@@ -1,4 +1,5 @@
 ﻿{
+  "name": "cinnamon-boost",
   "private": true,
   "engines": { "node": ">=22.13" },
   "scripts": { "test": "node scripts/test.mjs", "package": "node scripts/package.mjs" },

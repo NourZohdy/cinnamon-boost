@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { disableDevReload } from '../scripts/package.mjs';
 const source = readFileSync('src/background.js', 'utf8');
 const updateKey = 'soundOnly.update';
-const update = { checkedAt: 1, latest: '0.33.0', url: 'https://github.com/NourZohdy/ls-sound-only/releases/latest', newer: true };
+const update = { checkedAt: 1, latest: '0.33.0', url: 'https://github.com/NourZohdy/cinnamon-boost/releases/latest', newer: true };
 const current = '0.32.0';
 async function run({elapsed=0, interaction=false, before=null, dev=true, changeDuringRead=false}={}) {
   let resolveRead, listener, reloads=0, now=0; const events={}; const data=new Map(); if(before!==null)data.set('soundOnly.settings',before);

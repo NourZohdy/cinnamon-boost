@@ -1,19 +1,19 @@
 @echo off
 setlocal DisableDelayedExpansion
-set "LS_SOUND_UPDATE_SCRIPT=%~f0"
-set "LS_SOUND_UPDATE_DIR=%~dp0"
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$code = (Get-Content -Raw -LiteralPath $env:LS_SOUND_UPDATE_SCRIPT) -split '(?m)^:powershell\r?\n', 2; & ([ScriptBlock]::Create($code[1]))" && (pause & exit /b 0) || (pause & exit /b 1)
+set "CINNAMON_BOOST_UPDATE_SCRIPT=%~f0"
+set "CINNAMON_BOOST_UPDATE_DIR=%~dp0"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$code = (Get-Content -Raw -LiteralPath $env:CINNAMON_BOOST_UPDATE_SCRIPT) -split '(?m)^:powershell\r?\n', 2; & ([ScriptBlock]::Create($code[1]))" && (pause & exit /b 0) || (pause & exit /b 1)
 :powershell
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
-$url = 'https://github.com/NourZohdy/ls-sound-only/releases/latest/download/ls-sound-only.zip'
-$root = $env:LS_SOUND_UPDATE_DIR
+$url = 'https://github.com/NourZohdy/cinnamon-boost/releases/latest/download/cinnamon-boost.zip'
+$root = $env:CINNAMON_BOOST_UPDATE_DIR
 $zip = $null
 $archive = $null
 try {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $zip = [IO.Path]::GetTempFileName()
-    Write-Host 'Downloading the LS Sound only update...'
+    Write-Host 'Downloading the Cinnamon Boost update...'
     Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $zip -TimeoutSec 60
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     $archive = [IO.Compression.ZipFile]::OpenRead($zip)
@@ -73,10 +73,10 @@ try {
             if ([IO.File]::Exists($staged)) { [IO.File]::Delete($staged) }
         }
     }
-    Write-Host "Updated to $version. Now open the LS Sound only popup and click Reload extension (or click the reload arrow in chrome://extensions), then refresh Label Studio."
+    Write-Host "Updated to Cinnamon Boost $version. Now open the Cinnamon Boost popup and click Reload extension (or click the reload arrow in chrome://extensions), then refresh Label Studio."
 } catch {
-    Write-Host "Could not update LS Sound only. $($_.Exception.Message)"
-    Write-Host 'To update manually, download the ZIP and extract it into your LS Sound only folder, replacing the existing files. Then reload the extension and refresh Label Studio.'
+    Write-Host "Could not update Cinnamon Boost. $($_.Exception.Message)"
+    Write-Host 'To update manually, download the ZIP and extract it into your Cinnamon Boost folder, replacing the existing files. Then reload the extension and refresh Label Studio.'
     Write-Host $url
     exit 1
 } finally {

@@ -1,6 +1,6 @@
 (() => {
-  const { mediaKey, isMediaType, cacheRequestUrl, keysToEvict, CACHE_NAME, CACHE_MAX_FILES, reusePreloadedWaveform, captureBlob, hookResponse, preferLocalMedia } = window.LSSoundOnly.helpers;
-  window.LSSoundOnly.features.cache = { start(ctx) {
+  const { mediaKey, isMediaType, cacheRequestUrl, keysToEvict, CACHE_NAME, CACHE_MAX_FILES, reusePreloadedWaveform, captureBlob, hookResponse, preferLocalMedia } = window.CinnamonBoost.helpers;
+  window.CinnamonBoost.features.cache = { start(ctx) {
     const { window, document } = ctx;
     let stored = null;                       // { key, blobUrl } of the current task's file
     const cached = new Map();                // key -> blob URL of a file saved on disk
@@ -37,7 +37,7 @@
           if (res && !isMediaType(res.headers.get('Content-Type'))) { await cache.delete(req); continue; }   // saved by an older build
           if (key && res) rememberBlob(key, await res.blob());
         }
-      } catch (e) { console.warn('[sound-only] cache unavailable', e); }
+      } catch (e) { console.warn('[Cinnamon Boost] cache unavailable', e); }
       cacheReady = true;
     })();
     async function saveToCache(key, blob) {
@@ -57,7 +57,7 @@
             blobs.delete(oldKey);
           }
         }
-      } catch (e) { console.warn('[sound-only] could not save to cache', e); }
+      } catch (e) { console.warn('[Cinnamon Boost] could not save to cache', e); }
     }
     const fetch = window.fetch;
     function cachedResponse(blob, range) {

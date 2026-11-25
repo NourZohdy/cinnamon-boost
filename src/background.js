@@ -1,11 +1,12 @@
 ﻿// Service worker and isolated page bridge.
 const DEV = true;
+// ponytail: storage keys keep the old soundOnly. prefix so existing settings and caches survive the rename
 const SETTINGS_KEY = 'soundOnly.settings';
 const MODE_KEY = 'soundOnly.mode';
 if (typeof window === 'undefined') {
   globalThis.importScripts('/src/shared/update.js');
-  const REPO = 'NourZohdy/ls-sound-only';
-  const { UPDATE_KEY, isNewer, releaseUrl } = globalThis.LSSoundOnly.update;
+  const REPO = 'NourZohdy/cinnamon-boost';
+  const { UPDATE_KEY, isNewer, releaseUrl } = globalThis.CinnamonBoost.update;
   const current = chrome.runtime.getManifest().version;
   const hour = 60 * 60 * 1000;
   const setBadge = async record => {

@@ -1,6 +1,6 @@
 (() => {
-  const { pagerWindow, pagerAnnotation, mediaKey, processedSegmentResult, pagerStat, pagerTime, submitDecision, PAGER_CACHE_ICONS } = window.LSSoundOnly.helpers;
-  const { bindingLabel } = window.LSSoundOnly.settings;
+  const { pagerWindow, pagerAnnotation, mediaKey, processedSegmentResult, pagerStat, pagerTime, submitDecision, PAGER_CACHE_ICONS } = window.CinnamonBoost.helpers;
+  const { bindingLabel } = window.CinnamonBoost.settings;
   function saveButtonKind(button) {
     if (!button || button.closest('[hidden]')) return;
     const testId = button.dataset.testid;
@@ -10,7 +10,7 @@
     const label = (button.getAttribute('aria-label') || button.textContent).trim().toLowerCase();
     if (label === 'submit' || label === 'update') return label;
   }
-  window.LSSoundOnly.features.pager = { start(ctx) {
+  window.CinnamonBoost.features.pager = { start(ctx) {
     const { window, document, editing, currentTaskId } = ctx;
     const tasksById = ctx.preload?.tasksById || new Map();
     const durations = ctx.cache?.durations || new Map(), readDuration = key => ctx.cache?.readDuration(key);

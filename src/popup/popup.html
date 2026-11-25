@@ -2,21 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>LS Sound only settings</title>
+  <title>Cinnamon Boost settings</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <header>
     <strong>
-      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6v4h2.5l3.5 3V3L5 6z"></path><path d="M11 5.5a3.5 3.5 0 0 1 0 5M12.8 3.8a6 6 0 0 1 0 8.4"></path></svg>
-      &nbsp; LS Sound only
+      <img src="../../icons/logo.svg" width="24" height="24" alt="">
+      Cinnamon Boost
     </strong>
     <span>Settings</span>
   </header>
   <section id="update-banner" aria-labelledby="update-version" hidden>
     <strong id="update-version" role="status"></strong>
     <ol>
-      <li>Double-click <strong>update.cmd</strong> in your LS Sound only folder.</li>
+      <li>Double-click <strong>update.cmd</strong> in your <strong>cinnamon-boost</strong> folder.</li>
       <li>Click Reload extension.</li>
       <li>Refresh the Label Studio tab.</li>
     </ol>
@@ -26,19 +26,27 @@
     </div>
   </section>
   <section>
-    <div class="heading">Preset <span id="custom" hidden>Custom</span></div>
-    <div id="presets" class="segments"></div>
+    <div class="heading">Mode <span id="custom" hidden>Custom</span></div>
+    <div id="presets" role="radiogroup" aria-label="Mode"></div>
   </section>
   <main id="sections"></main>
   <footer>
     <p id="status" role="status" hidden></p>
     <div>
       <button id="reset" class="link" disabled>Reset to defaults</button>
-      <span class="version-actions">
-        <button id="check-update" class="link" type="button">Check for updates</button>
-        <span id="version"></span>
-      </span>
+      <button id="check-update" class="link" type="button">Check for updates</button>
     </div>
+    <details class="footer-about">
+      <summary><span id="version"></span> · <span class="about-label">About</span></summary>
+      <div class="about-panel">
+        <strong class="about-title">
+          <img src="../../icons/logo.svg" width="24" height="24" alt="">
+          <span>Cinnamon Boost <span id="about-version"></span></span>
+        </strong>
+        <p>Made by Nour Tammous</p>
+        <a href="https://github.com/NourZohdy/cinnamon-boost" target="_blank" rel="noopener">github.com/NourZohdy/cinnamon-boost</a>
+      </div>
+    </details>
     <p id="update-result" role="status"></p>
   </footer>
   <script src="../shared/settings.js"></script>

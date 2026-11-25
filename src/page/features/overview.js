@@ -1,6 +1,6 @@
 (() => {
-  const { zoomAt, zoomFactor, peaks, pageAt } = window.LSSoundOnly.helpers;
-  window.LSSoundOnly.features.overview = { start(ctx) {
+  const { zoomAt, zoomFactor, peaks, pageAt } = window.CinnamonBoost.helpers;
+  window.CinnamonBoost.features.overview = { start(ctx) {
     const { window, document, editing } = ctx;
     // --- gentle zoom: Ctrl/Cmd + wheel on the wave ---
     window.addEventListener('wheel', e => {

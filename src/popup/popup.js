@@ -1,6 +1,11 @@
-﻿const { DEFAULTS, normalizeSettings, migrateSettings, matchPreset, applyPreset, keyGroup, validBinding, bindingLabel, eventBinding } = window.LSSoundOnly.settings;
-const { UPDATE_KEY, isNewer, releaseUrl } = window.LSSoundOnly.update;
+﻿const { DEFAULTS, normalizeSettings, migrateSettings, matchPreset, applyPreset, keyGroup, validBinding, bindingLabel, eventBinding } = window.CinnamonBoost.settings;
+const { UPDATE_KEY, isNewer, releaseUrl } = window.CinnamonBoost.update;
 const KEY = 'soundOnly.settings';
+const modes = [
+  ['full', 'Full', 'Everything on: compact layout, task tiles, wave tools, shortcuts and fast loading.', 'Recommended'],
+  ['loading', 'Loading fix only', 'Label Studio looks the same; videos just load faster and play smoothly.'],
+  ['off', 'Off', 'Label Studio exactly as normal.'],
+];
 const sections = [
   ['Sound & loading', [
     ['sound', 'Sound fixes & controls', 'Smooth playback, Speed mode, Speed and Loop.'],
@@ -40,16 +45,35 @@ function renderPresets() {
   const match = matchPreset(settings);
   document.getElementById('custom').hidden = match !== 'custom';
   presets.replaceChildren();
-  for (const [id, label] of [['everything', 'Everything'], ['sound', 'Sound & loading'], ['interface', 'Interface only'], ['off', 'Off']]) {
+  for (const [id, label, description, tag] of modes) {
     const button = document.createElement('button');
-    button.className = 'seg';
-    button.textContent = label;
+    button.type = 'button';
+    button.className = 'mode-card';
     button.disabled = !loaded;
-    button.setAttribute('aria-pressed', String(match === id));
-    button.onclick = () => save(applyPreset(settings, id));
+    button.tabIndex = id === match || (match === 'custom' && id === modes[0][0]) ? 0 : -1;
+    button.setAttribute('role', 'radio');
+    button.setAttribute('aria-checked', String(match === id));
+    button.setAttribute('aria-labelledby', `mode-${id}-label${tag ? ` mode-${id}-tag` : ''}`);
+    button.setAttribute('aria-describedby', `mode-${id}-description`);
+    button.innerHTML = `<span class="mode-title"><strong id="mode-${id}-label">${label}</strong>${
+      tag ? `<span class="mode-tag" id="mode-${id}-tag">${tag}</span>` : ''
+    }</span><span class="desc" id="mode-${id}-description">${description}</span>`;
+    button.onclick = () => {
+      save(applyPreset(settings, id));
+      presets.querySelector('[aria-checked="true"]').focus();
+    };
     presets.append(button);
   }
 }
+
+presets.addEventListener('keydown', event => {
+  const direction = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 }[event.key];
+  if (!direction || event.target.parentElement !== presets || event.target.disabled) return;
+  event.preventDefault();
+  const cards = [...presets.children];
+  const index = cards.indexOf(event.target);
+  cards[(index + direction + cards.length) % cards.length].click();
+});
 
 function renderPreload(blocked, describedBy) {
   const group = document.createElement('div');
@@ -222,7 +246,9 @@ async function load() {
 
 reset.onclick = () => save({ ...DEFAULTS });
 const current = chrome.runtime.getManifest().version;
-document.getElementById('version').textContent = 'v' + current;
+const versionLabel = 'v' + current;
+document.getElementById('version').textContent = versionLabel;
+document.getElementById('about-version').textContent = versionLabel;
 const banner = document.getElementById('update-banner');
 const updateVersion = document.getElementById('update-version');
 const releaseLink = document.getElementById('release-link');

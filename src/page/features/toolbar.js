@@ -1,7 +1,7 @@
 (() => {
-  window.LSSoundOnly.features.toolbar = { start(ctx) {
+  window.CinnamonBoost.features.toolbar = { start(ctx) {
     const { window, document } = ctx;
-    const { UPDATE_KEY, isNewer, releaseUrl } = window.LSSoundOnly.update;
+    const { UPDATE_KEY, isNewer, releaseUrl } = window.CinnamonBoost.update;
     const playbackButton = ctx.ui.playbackButton;
     // --- toolbar (lives in LS's bottom bar, between its icons and Submit) ---
     // styles live in content.css (manifest). Runtime geometry measured from LS goes into one generated rule:
@@ -26,7 +26,7 @@
     const update = document.createElement('button');
     update.type = 'button';
     update.className = 'so-btn so-update';
-    update.title = 'A new version of LS Sound only is available. Click to see how to update.';
+    update.title = 'A new version of Cinnamon Boost is available. Click to see how to update.';
     bar.append(update);
     const readUpdate = () => {
       try { return JSON.parse(window.localStorage.getItem(UPDATE_KEY)); } catch (_) { return null; }

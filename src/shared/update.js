@@ -1,5 +1,5 @@
 (() => {
-  const releases = 'https://github.com/NourZohdy/ls-sound-only/releases/';
+  const releases = 'https://github.com/NourZohdy/cinnamon-boost/releases/';
   const version = /^\d+(\.\d+){0,3}$/;
 
   function isNewer(latest, current) {
@@ -22,10 +22,11 @@
     return releases + 'latest';
   }
 
+  // ponytail: keep the soundOnly. key so existing cached update checks survive the rename.
   const api = { UPDATE_KEY: 'soundOnly.update', isNewer, releaseUrl };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else {
-    globalThis.LSSoundOnly = globalThis.LSSoundOnly || {};
-    globalThis.LSSoundOnly.update = api;
+    globalThis.CinnamonBoost = globalThis.CinnamonBoost || {};
+    globalThis.CinnamonBoost.update = api;
   }
 })();

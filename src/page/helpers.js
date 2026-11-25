@@ -1,7 +1,7 @@
 /* global require */
 (() => {
 const { DEFAULTS, eventBinding } = typeof module !== 'undefined' && module.exports
-  ? require('../shared/settings.js') : window.LSSoundOnly.settings;
+  ? require('../shared/settings.js') : window.CinnamonBoost.settings;
 function segmentShortcut(e, typing, keys = DEFAULTS.keys, inTranscription = false) {
   if (typing && !inTranscription) return null;
   const binding = eventBinding(e, typing);
@@ -81,6 +81,8 @@ const PAGER_CACHE_ICONS = {
   error: svg('<circle cx="8" cy="8" r="5.5"/><path d="m6 6 4 4m0-4-4 4"/>'),
 };
 
+// ponytail: keep the cache name and request path so previously cached media remains available.
+// ponytail: old cache name kept so cached videos survive the rename
 const CACHE_NAME = 'sound-only-v1';
 const CACHE_MAX_FILES = 6;  // ponytail: count limit, not bytes; ~6 x 80 MB here. Switch to a byte budget if files get big.
 
@@ -125,7 +127,7 @@ function hookResponse(xhr, nativeGet, onFull) {
       const response = nativeGet.call(xhr);
       if (!done && xhr.readyState === 4) {
         done = true;
-        try { onFull(response); } catch (e) { console.warn('[sound-only] capture failed', e); }
+        try { onFull(response); } catch (e) { console.warn('[Cinnamon Boost] capture failed', e); }
       }
       return response;
     }
@@ -187,8 +189,8 @@ function reusePreloadedWaveform(xhr, { result, controller }, openLocal) {
 // seeks to [0, duration], so a NaN duration crashes it. Until the new file's metadata
 // is ready, the element reports the old (identical) duration and position instead.
 function swapWhenPaused(el, blobUrl, key) {
-  if (!el.paused || el.dataset.soundOnlySwap || el.currentSrc === blobUrl ||
-      el.dataset.soundOnlyFailed === key) return false;
+  if (!el.paused || el.dataset.boostSwap || el.currentSrc === blobUrl ||
+      el.dataset.boostFailed === key) return false;
   const duration = el.duration;
   if (!Number.isFinite(duration) || duration <= 0) return false;
   const oldSrc = el.currentSrc;
@@ -200,7 +202,7 @@ function swapWhenPaused(el, blobUrl, key) {
     get: () => time,
     set: v => { if (Number.isFinite(v)) time = Math.min(Math.max(v, 0), duration); }
   });
-  el.dataset.soundOnlySwap = '1';
+  el.dataset.boostSwap = '1';
   let released = false;
   // restore = put the old position back; only when the element still plays this file
   // (Label Studio may have loaded another task's file into it meanwhile).
@@ -213,7 +215,7 @@ function swapWhenPaused(el, blobUrl, key) {
     }
     delete el.duration;
     delete el.currentTime;
-    delete el.dataset.soundOnlySwap;
+    delete el.dataset.boostSwap;
     if (!restore) return;
     el.currentTime = time;
     el.playbackRate = rate;
@@ -221,16 +223,16 @@ function swapWhenPaused(el, blobUrl, key) {
   const onReady = () => {
     if (el.src !== blobUrl || el.currentSrc !== blobUrl) { release(false); return; }
     release(true);
-    if (Math.abs(el.duration - duration) > 0.5) console.warn('[sound-only] local copy length differs', el.duration, duration);
-    el.dataset.soundOnlyLocal = key;
+    if (Math.abs(el.duration - duration) > 0.5) console.warn('[Cinnamon Boost] local copy length differs', el.duration, duration);
+    el.dataset.boostLocal = key;
   };
   const onFallback = () => release(el.src === oldSrc);
   const onError = () => {
     if (el.src !== blobUrl) { release(false); return; }
     // Local copy failed: go back to the server file, still guarded until it is ready,
     // and never retry this file on this element (a retry loop makes the video flicker).
-    el.dataset.soundOnlyFailed = key;
-    console.warn('[sound-only] local copy failed to load; staying on the server file');
+    el.dataset.boostFailed = key;
+    console.warn('[Cinnamon Boost] local copy failed to load; staying on the server file');
     el.removeEventListener('error', onError);
     el.removeEventListener('loadedmetadata', onReady);
     el.addEventListener('loadedmetadata', onFallback);
@@ -244,7 +246,7 @@ function swapWhenPaused(el, blobUrl, key) {
 }
 
 function preferLocalMedia(el, blobUrl, key, base) {
-  if (!el?.paused || el.dataset.soundOnlySwap || el.dataset.soundOnlyFailed === key ||
+  if (!el?.paused || el.dataset.boostSwap || el.dataset.boostFailed === key ||
       el.src === blobUrl || el.currentSrc === blobUrl) return false;
   const serverSrc = el.src || el.currentSrc;
   if (mediaKey(serverSrc, base) !== key) return false;
@@ -268,7 +270,7 @@ function preferLocalMedia(el, blobUrl, key, base) {
   const onError = () => {
     cleanup();
     if (el.src !== blobUrl) return;
-    el.dataset.soundOnlyFailed = key;
+    el.dataset.boostFailed = key;
     setSource(serverSrc);
   };
   el.addEventListener('loadedmetadata', cleanup);
@@ -314,7 +316,7 @@ function skipTinySeeks(el, tol = 0.03) {
 
 // Install the echo filter as an own-property wrapper (untie/retie keep and restore it).
 function installSeekFilter(sm, timeOf) {
-  if (!sm || typeof sm.sync !== 'function' || sm.sync.__soEchoFilter || sm.__soundOnly) return false;
+  if (!sm || typeof sm.sync !== 'function' || sm.sync.__soEchoFilter || sm.__cinnamonBoost) return false;
   const inner = sm.sync;
   const filter = function (data, event, origin) {
     if (isEchoSeek(event, data, origin, this.syncTargets.values(), timeOf)) return false;
@@ -327,7 +329,7 @@ function installSeekFilter(sm, timeOf) {
 
 function untie(sm, audioName) {
   if (!sm) return null;
-  if (sm.__soundOnly) return sm.__soundOnly;
+  if (sm.__cinnamonBoost) return sm.__cinnamonBoost;
   if (!(sm.syncTargets instanceof Map) || !(sm.bufferingOrigins instanceof Set) ||
       typeof sm.sync !== 'function' || !sm.syncTargets.has(audioName)) return null;
 
@@ -341,7 +343,7 @@ function untie(sm, audioName) {
     if (state.active && state.removed.has(origin)) return false;
     return previousSync.call(this, data, event, origin);
   };
-  wrapper.__soundOnly = true;
+  wrapper.__cinnamonBoost = true;
   state.wrapper = wrapper;
   sm.sync = wrapper;
   for (const name of removed.keys()) {
@@ -349,12 +351,12 @@ function untie(sm, audioName) {
     if (sm.bufferingOrigins.delete(name)) state.wasBuffering = true;
     if (sm.locked === name) sm.locked = null;
   }
-  sm.__soundOnly = state;
+  sm.__cinnamonBoost = state;
   return state;
 }
 
 function retie(sm, state) {
-  if (!sm || !state || sm.__soundOnly !== state) return;
+  if (!sm || !state || sm.__cinnamonBoost !== state) return;
   state.active = false;
   if (Object.prototype.hasOwnProperty.call(sm, 'sync') && sm.sync === state.wrapper) {
     if (state.hadOwn) Object.defineProperty(sm, 'sync', state.prevOwn);
@@ -369,15 +371,15 @@ function retie(sm, state) {
   for (const [name, target] of current) {
     if (!sm.syncTargets.has(name)) sm.syncTargets.set(name, target);
   }
-  delete sm.__soundOnly;
+  delete sm.__cinnamonBoost;
 }
 
 function checkShape(sm, audioName, videoName) {
   if (!sm || !(sm.syncTargets instanceof Map) || !(sm.bufferingOrigins instanceof Set) ||
       typeof sm.sync !== 'function' || audioName === videoName) return false;
   const targets = new Map(sm.syncTargets);
-  if (sm.__soundOnly && sm.__soundOnly.active) {
-    for (const [name, target] of sm.__soundOnly.removed) {
+  if (sm.__cinnamonBoost && sm.__cinnamonBoost.active) {
+    for (const [name, target] of sm.__cinnamonBoost.removed) {
       if (!targets.has(name)) targets.set(name, target);
     }
   }
@@ -483,5 +485,5 @@ function pageTime(sec) {
 
 const helpers = { segmentShortcut, submitDecision, pageAt, isEchoSeek, installSeekFilter, skipTinySeeks, untie, retie, checkShape, mediaKey, isMediaType, captureBlob, hookResponse, reusePreloadedWaveform, swapWhenPaused, preferLocalMedia, cacheRequestUrl, keysToEvict, pickNextTask, zoomFactor, zoomAt, peaks, classifyHeader, flattenPath, isHotkey, readPref, writePref, fixedSlot, cardOf, noteReason, sideNote, clampSpeed, shortTime, lengthText, stepIndex, segmentState, pagerWindow, pagerStat, pagerAnnotation };
 if (typeof module !== 'undefined' && module.exports) module.exports = helpers;
-else Object.assign(window.LSSoundOnly ||= {}, { helpers: { ...helpers, svg, ICON, PAGER_CACHE_ICONS, CACHE_NAME, CACHE_MAX_FILES, isEditingField, pagerTime, processedSegmentResult, pageTime }, features: {} });
+else Object.assign(window.CinnamonBoost ||= {}, { helpers: { ...helpers, svg, ICON, PAGER_CACHE_ICONS, CACHE_NAME, CACHE_MAX_FILES, isEditingField, pagerTime, processedSegmentResult, pageTime }, features: {} });
 })();

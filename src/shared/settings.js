@@ -6,14 +6,13 @@
     seekBack: 'Digit9', seekForward: 'Digit0',
   });
   const keyGroup = action => action === 'prevTask' || action === 'submit' ? 'taskKeys' : 'segmentKeys';
-  const DEFAULTS = Object.freeze({ ...Object.fromEntries(keys.map(key => [key, true])), preload: 3, keys: KEY_DEFAULTS });
   const preset = (enabled, preload) => Object.freeze({ ...Object.fromEntries(keys.map(key => [key, enabled.includes(key)])), preload });
   const PRESETS = Object.freeze({
-    everything: preset(keys, 3),
-    sound: preset(['sound', 'cache', 'nextAfterSubmit'], 3),
-    interface: preset(['compact', 'pager', 'preview', 'gestures', 'nextAfterSubmit'], 0),
+    full: preset(keys, 3),
+    loading: preset(['sound', 'cache'], 3),
     off: preset([], 0),
   });
+  const DEFAULTS = Object.freeze({ ...PRESETS.full, keys: KEY_DEFAULTS });
   function validBinding(binding) {
     if (binding === '') return true;
     if (typeof binding !== 'string') return false;
@@ -62,5 +61,5 @@
   }
   const api = { DEFAULTS, PRESETS, normalizeSettings, migrateSettings, matchPreset, applyPreset, keyGroup, validBinding, bindingLabel, eventBinding };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
-  else { window.LSSoundOnly = window.LSSoundOnly || {}; window.LSSoundOnly.settings = api; }
+  else { window.CinnamonBoost = window.CinnamonBoost || {}; window.CinnamonBoost.settings = api; }
 })();

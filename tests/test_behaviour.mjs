@@ -286,7 +286,7 @@ await test('pager Next and nextAfterSubmit cross the last loaded Data Manager ro
   f.advance(500);
   const next = d.querySelector('.so-pager button[aria-label="Next"]');
   assert.equal(next.disabled, false);
-  assert.deepEqual([...w.LSSoundOnly.ctx.pager.pagerTasks().near.before], [1]);
+  assert.deepEqual([...w.CinnamonBoost.ctx.pager.pagerTasks().near.before], [1]);
   next.click();
   await w.Htx.events.invoke('updateAnnotation', w.Htx, ann);
   f.advance(0);

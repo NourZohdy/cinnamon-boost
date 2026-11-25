@@ -103,13 +103,15 @@ await test('swapWhenPaused swaps a paused element and keeps time and speed', asy
   const el = new FakeMedia(true);
   assert.equal(swapWhenPaused(el, 'blob:local-1', 'k1'), true);
   assert.equal(el.src, 'blob:local-1');
+  assert.equal(el.dataset.boostSwap, '1');
   await tick(20);
   assert.equal(el.currentTime, 42.5);
   assert.equal(el.duration, 147.05);
   assert.equal(el.playbackRate, 1.5);
   assert.equal(el.muted, true);
   assert.equal(el.played, 0);
-  assert.equal(el.dataset.soundOnlyLocal, 'k1');
+  assert.equal(el.dataset.boostSwap, undefined);
+  assert.equal(el.dataset.boostLocal, 'k1');
   assert.equal(Object.hasOwn(el, 'duration') || Object.hasOwn(el, 'currentTime'), false);
 });
 
@@ -133,7 +135,8 @@ await test('a failed local copy goes back to the server file, still guarded', as
   assert.doesNotThrow(() => lsSeek(el, 10));
   await tick(20);
   assert.equal(el.currentTime, 10);
-  assert.equal(el.dataset.soundOnlyLocal, undefined);
+  assert.equal(el.dataset.boostFailed, 'k1');
+  assert.equal(el.dataset.boostLocal, undefined);
   assert.equal(Object.hasOwn(el, 'duration'), false);
   // no retry loop for the same file (the retry loop made the video flicker)
   assert.equal(swapWhenPaused(el, 'blob:bad-1', 'k1'), false);

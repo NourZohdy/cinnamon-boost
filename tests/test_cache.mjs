@@ -170,7 +170,7 @@ test('a stale cache error cannot replace the newly selected task source', () => 
   player.src = next;
   player.dispatchEvent(new Event('error'));
   assert.equal(player.src, next);
-  assert.equal(player.dataset.soundOnlyFailed, undefined);
+  assert.equal(player.dataset.boostFailed, undefined);
 });
 
 {
@@ -194,7 +194,7 @@ test('a stale cache error cannot replace the newly selected task source', () => 
     },
   });
   const { w } = f;
-  await w.LSSoundOnly.ctx.cache.ready;
+  await w.CinnamonBoost.ctx.cache.ready;
   const options = { headers: { Range: 'bytes=0-0' } };
   const probe = await w.fetch(serverSrc, options);
   assert.equal(probe.status, 206);
@@ -220,8 +220,8 @@ test('a stale cache error cannot replace the newly selected task source', () => 
   assert.equal(requests.length, 1);
   assert.equal(String(requests[0][0]), nextSrc);
   assert.equal(requests[0][1].signal.aborted, false);
-  await w.LSSoundOnly.ctx.preload.transferFor(mediaKey(nextSrc, O))?.result;
-  assert.ok(w.LSSoundOnly.ctx.cache.has(mediaKey(nextSrc, O)), 'uncached preload downloads from the network');
+  await w.CinnamonBoost.ctx.preload.transferFor(mediaKey(nextSrc, O))?.result;
+  assert.ok(w.CinnamonBoost.ctx.cache.has(mediaKey(nextSrc, O)), 'uncached preload downloads from the network');
   const preloadedProbe = await w.fetch(nextSrc, options);
   assert.equal(preloadedProbe.status, 206);
   assert.equal(await preloadedProbe.text(), 'm');

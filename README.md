@@ -1,12 +1,14 @@
-# LS Sound only
+<img src="icons/logo.svg" width="96">
+
+# Cinnamon Boost
 
 A Chrome extension that makes [Label Studio](https://labelstud.io/) faster and easier for **audio and video transcription**. It puts the video, the waveform and a segment list in one window, keeps files on your computer so tasks open instantly, and adds keyboard shortcuts for the whole workflow.
 
-**Illustrated install guide (English / العربية): https://nourzohdy.github.io/ls-sound-only/docs/install.html**
+**Illustrated install guide (English / العربية): https://nourzohdy.github.io/cinnamon-boost/docs/install.html**
 
 The same guide is included in the ZIP at `docs/install.html`.
 
-![Label Studio with LS Sound only: video, wave and segment list in one row, task tiles at the bottom](docs/images/screenshot.jpg)
+![Label Studio with Cinnamon Boost: video, wave and segment list in one row, task tiles at the bottom](docs/images/screenshot.jpg)
 
 > Built for the team's Label Studio server (`annotation.dlnlp.ai`, Label Studio 1.23). See [Using it on another server](#using-it-on-another-server).
 
@@ -16,8 +18,8 @@ The same guide is included in the ZIP at `docs/install.html`.
 
 ### Install (once, about 2 minutes)
 
-1. Download **`ls-sound-only.zip`** from the [latest release](https://github.com/NourZohdy/ls-sound-only/releases/latest).
-2. Unzip it into a folder you will keep (for example `Documents\ls-sound-only`).
+1. Download **`cinnamon-boost.zip`** from the [latest release](https://github.com/NourZohdy/cinnamon-boost/releases/latest).
+2. Unzip it into a folder you will keep (for example `Documents\cinnamon-boost`).
 3. Open **`docs/install.html`** in that folder and follow the illustrated steps (English and Arabic).
 
 In short: `chrome://extensions` → turn on **Developer mode** → **Load unpacked** → choose the folder.
@@ -26,7 +28,7 @@ In short: `chrome://extensions` → turn on **Developer mode** → **Load unpack
 
 When a new version is out, an **Update** button appears in the extension's bar in Label Studio, and the extension icon shows **NEW**.
 
-1. Double-click **`update.cmd`** in your LS Sound only folder. It downloads the new version into the same folder.
+1. Double-click **`update.cmd`** in your Cinnamon Boost folder (the same folder you originally loaded in Chrome). It downloads the new version into that folder.
 2. Click the extension icon, then **Reload extension**.
 3. Refresh the Label Studio tab.
 
@@ -42,7 +44,7 @@ You can also update by hand: download the zip again and unzip it over the same f
 - **Sound tools**: smooth playback, *Speed mode* (wave plays without waiting for the picture), speed slider, loop.
 - **Waveform**: overview strip, gentle Ctrl + wheel zoom, drag the ruler to scrub, click a segment to replay it, segment length while dragging, *Add all* highlights as segments.
 - **Safer submit**: a second Submit on the same task updates your annotation instead of creating a duplicate.
-- **Settings popup**: presets (*Everything*, *Sound & loading*, *Interface only*, *Off*), every feature switchable, every shortcut rebindable.
+- **Settings popup**: choose *Full* (recommended), *Loading fix only* (faster loading and smoother playback with the standard layout), or *Off*. You can also toggle features individually and rebind shortcuts.
 
 ### Keyboard shortcuts (default)
 
@@ -61,7 +63,7 @@ You can also update by hand: download the zip again and unzip it over the same f
 
 ### Something wrong?
 
-Open the extension's settings (blue speaker icon) and choose **Off**, then reload the Label Studio tab. Please [open an issue](https://github.com/NourZohdy/ls-sound-only/issues) or tell the maintainer what happened.
+Open the extension's settings (cinnamon roll icon) and choose **Off**, then reload the Label Studio tab. Please [open an issue](https://github.com/NourZohdy/cinnamon-boost/issues) or tell the maintainer what happened.
 
 ### Privacy
 
@@ -76,7 +78,7 @@ Requirements: Chrome or Edge, Node.js 22.13 or newer.
 ```sh
 npm ci            # ESLint and jsdom for the tests
 npm test          # syntax checks, ESLint and every test_*.mjs suite
-npm run package   # builds dist/ls-sound-only.zip (runtime files only)
+npm run package   # builds dist/cinnamon-boost.zip (runtime files only)
 ```
 
 For development, load the repository folder itself with **Load unpacked**. In a Label Studio tab, `window.postMessage('so-dev-reload', '*')` reloads the extension (this hook is switched off in the packaged build).
@@ -104,7 +106,7 @@ For development, load the repository folder itself with **Load unpacked**. In a 
 
 1. Bump `version` in `manifest.json` and commit to `main`.
 2. Tag and push: `git tag v0.33.0 && git push origin main v0.33.0`.
-3. The *Release* workflow checks that the tag matches the manifest, runs the tests, builds `ls-sound-only.zip` and publishes the GitHub release. Teammates see the Update button within a few hours.
+3. The *Release* workflow checks that the tag matches the manifest, runs the tests, builds `cinnamon-boost.zip` and publishes the GitHub release. Teammates see the Update button within a few hours.
 
 ### Using it on another server
 

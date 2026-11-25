@@ -1,7 +1,7 @@
 (() => {
-  const { isHotkey, isEditingField, segmentShortcut, classifyHeader, cardOf, stepIndex } = window.LSSoundOnly.helpers;
-  const { keyGroup } = window.LSSoundOnly.settings;
-  window.LSSoundOnly.features.keyboard = { start(ctx) {
+  const { isHotkey, isEditingField, segmentShortcut, classifyHeader, cardOf, stepIndex } = window.CinnamonBoost.helpers;
+  const { keyGroup } = window.CinnamonBoost.settings;
+  window.CinnamonBoost.features.keyboard = { start(ctx) {
     const { window, document, editing } = ctx;
     const playbackButton = ctx.ui.playbackButton;
     const hintlessText = el => { const copy = el.cloneNode(true); copy.querySelectorAll('.so-hint').forEach(h => h.remove()); return copy.textContent.trim(); };
@@ -106,7 +106,7 @@
       }
       if (!action) return;
       e.preventDefault(); e.stopImmediatePropagation();
-      try { action(); } catch (err) { console.warn('[sound-only] code switching choice failed',err); }
+      try { action(); } catch (err) { console.warn('[Cinnamon Boost] code switching choice failed',err); }
     }, true);
     window.addEventListener('keyup', e => {
       if (!ctx.settings.segmentKeys) return;

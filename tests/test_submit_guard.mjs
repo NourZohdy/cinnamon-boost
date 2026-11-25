@@ -75,7 +75,7 @@ for (const [label, annotations, failedUrl, event = 'submitAnnotation', duplicate
   ];
   const paths = () => requests.map(({ path }) => path);
   assert.deepEqual(paths(), [userUrl], 'whoami starts before any save');
-  const pager = w.LSSoundOnly.ctx.pager;
+  const pager = w.CinnamonBoost.ctx.pager;
   // Call the event directly, like Label Studio's own shortcut.
   const attempt = firstEvents.invoke(event, w.Htx, submitted);
   const patchFailed = failedUrl === patchUrl;
