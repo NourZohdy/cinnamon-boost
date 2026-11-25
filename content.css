@@ -1,0 +1,657 @@
+/* LS Sound only - all extension styles.
+   Order: 1 tokens, 2 components, 3 sound toolbar, 4 compact frame, 5 compact layout, 6 question cards, 7 segments panel, 8 task pager.
+   No inline styles: the only runtime values (positions measured from LS) arrive as --so-geo-* custom properties
+   in one generated rule (see setGeometry in content.js).
+   `!important` appears only where LS sets the same property inline or with !important. */
+
+/* ---------- 1. tokens ----------
+   Neutrals come from Label Studio's own theme variables, so they follow its Light / Dark switch
+   (html[data-color-scheme]); the fallbacks are the light values. Colours LS has no variable for
+   (question tones, status, overview) get a dark set below. Nothing after this section names a colour. */
+:root {
+  --so-surface: var(--color-neutral-background, #fdfdfc);       /* cards, chips */
+  --so-subtle: var(--color-neutral-surface, #f9f8f6);           /* quiet fills */
+  --so-subtle-2: var(--color-neutral-surface-active, #f0efeb);
+  --so-ink: var(--color-neutral-content, #262522);
+  --so-ink-2: var(--color-neutral-content-subtle, #45433e);
+  --so-muted: var(--color-neutral-content-subtler, #6b6860);
+  --so-line: var(--color-neutral-border, #e1ded5);
+  --so-line-soft: var(--color-neutral-border-subtler, #f0efeb);
+  --so-line-strong: var(--color-neutral-border-bold, #cac5b8);
+  --so-knob: #fff;                                              /* switch knob, both themes */
+
+  --so-accent: #3a4bc0;             /* our own controls: toolbar, slider, segments panel */
+  --so-accent-strong: #1f3a9a;
+  --so-accent-soft: #e8ecff;
+  --so-accent-line: #c5cdf7;
+  --so-focus: #5b6fd6;
+
+  /* one tone per question; components read --so-tone. --so-on-tone = text on a filled (selected) chip */
+  --so-tone-gender: #6d3fc0;
+  --so-tone-dialect: #0b7a6a;
+  --so-tone-micro: #2f50c8;
+  --so-tone-text: #4f5870;
+  --so-tone-code: #a86400;
+  --so-tone-alt: #7d5f00;
+  --so-tone-skip: #5b6178;          /* skip = set aside, not delete: slate, never red */
+  --so-tone-segments: #2f50c8;
+  --so-on-tone: #fff;
+  --so-choice-tint: 8%;
+
+  /* 'Could possibly also be': selected chips */
+  --so-alt-sel-bg: #f6d86b;
+  --so-alt-sel-line: #e2bf3f;
+  --so-alt-sel-ink: #3f3000;
+
+  --so-ok: #1f7a3d;   --so-ok-bg: #e7f6ec;
+  --so-warn: #8a5200; --so-warn-bg: #fff4e0;
+  --so-err: #b42318;  --so-err-bg: #fdecec;
+
+  /* overview strip under the wave (drawn on a canvas; content.js reads these) */
+  --so-ov-wave: #9aa1bd;
+  --so-ov-region: rgba(76, 95, 213, .22);
+  --so-ov-region-on: rgba(76, 95, 213, .45);
+  --so-ov-dim: rgba(244, 245, 249, .72);
+  --so-ov-window: #4c5fd5;
+  --so-ov-playhead: #e5484d;
+
+  --so-shadow: 0 2px 10px rgba(30, 40, 90, .10);
+  --so-shadow-pop: 0 4px 20px rgba(0, 0, 0, .13);
+
+  --so-r-control: 6px;              /* buttons, toggles, inputs */
+  --so-r-card: 10px;
+  --so-r-chip: 999px;               /* answer choices and status chips */
+  --so-h-control: 26px;
+  --so-h-chip: 21px;
+  --so-gap: 8px;                    /* one spacing step between every card, row and column */
+  --so-fs-control: 13px;
+  --so-fs-chip: 12px;
+  --so-fs-title: 11.5px;
+  --so-fs-small: 11px;
+
+  --so-icon-skip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 3.2l7 4.8-7 4.8z'/%3E%3Crect x='11' y='3.2' width='2' height='9.6' rx='.6'/%3E%3C/svg%3E");
+}
+/* dark: lighter tones read on LS's dark background; filled chips get dark text */
+:root[data-color-scheme="dark"] {
+  --so-accent: #93a8ff;
+  --so-accent-strong: #c3cefb;
+  --so-accent-soft: #1f2640;
+  --so-accent-line: #37447a;
+  --so-focus: #93a8ff;
+
+  --so-tone-gender: #b69cf2;
+  --so-tone-dialect: #4fd1bd;
+  --so-tone-micro: #93a8ff;
+  --so-tone-text: #c4c0b6;
+  --so-tone-code: #f0b35a;
+  --so-tone-alt: #e9c855;
+  --so-tone-skip: #b3b0a8;
+  --so-tone-segments: #93a8ff;
+  --so-on-tone: #1a1814;
+  --so-choice-tint: 12%;
+
+  --so-alt-sel-bg: #e9c855;
+  --so-alt-sel-line: #e9c855;
+  --so-alt-sel-ink: #2a2100;
+
+  --so-ok: #6fd39a;   --so-ok-bg: #17301f;
+  --so-warn: #f0b35a; --so-warn-bg: #3a2a12;
+  --so-err: #ff8a80;  --so-err-bg: #3d1a18;
+
+  --so-ov-wave: #7d796f;
+  --so-ov-region: rgba(147, 168, 255, .22);
+  --so-ov-region-on: rgba(147, 168, 255, .45);
+  --so-ov-dim: rgba(38, 37, 34, .72);
+  --so-ov-window: #93a8ff;
+  --so-ov-playhead: #ff6b6b;
+
+  --so-shadow: 0 2px 10px rgba(0, 0, 0, .4);
+  --so-shadow-pop: 0 4px 20px rgba(0, 0, 0, .5);
+}
+
+/* ---------- 2. components ---------- */
+
+/* 2a. toggle button: '+ Add Segment' (LS label, a mode you switch into); tone = the label's colour */
+.so-compact [data-so="labels"] .lsf-label, .so-compact .so-addall {
+  box-sizing: border-box;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--so-h-control) !important;
+  margin: 0 !important;
+  padding: 0 10px !important;
+  border: 1px solid var(--so-line) !important;
+  border-radius: var(--so-r-control) !important;
+  background: var(--so-surface) !important;
+  color: var(--so-ink) !important;
+  font-size: var(--so-fs-control) !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+.so-compact [data-so="labels"] .lsf-label { --so-tone: var(--color, var(--so-tone-micro)); }
+.so-compact [data-so="labels"] .lsf-label:hover { background: var(--so-subtle) !important; }
+.so-compact .so-addall { flex: none; width: auto; margin-left: 6px !important; font-family: inherit; }
+.so-compact .so-addall:hover:not(:disabled) { background: var(--so-subtle) !important; }
+.so-compact .so-addall:disabled { opacity: .45; cursor: default; }
+.so-compact [data-so="labels"] .lsf-label_selected {
+  border-color: var(--so-tone) !important;
+  background: color-mix(in srgb, var(--so-tone) 12%, var(--so-surface)) !important;
+  color: color-mix(in srgb, var(--so-tone) 75%, var(--so-ink)) !important;
+}
+.so-compact [data-so="labels"] .lsf-label * { color: inherit !important; }
+.so-compact [data-so="skip"] .so-skip-chip::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  flex: none;
+  background: var(--so-tone);
+  -webkit-mask: var(--so-icon-skip) center / contain no-repeat;
+  mask: var(--so-icon-skip) center / contain no-repeat;
+}
+
+/* 2a'. switch: 'Skip entire video' is on/off state, so it reads as a switch (label, then track + knob) */
+.so-compact [data-so="skipall"] .so-skipall-toggle {
+  --so-tone: var(--so-tone-skip);
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--so-h-control) !important;
+  margin: 0 !important;
+  padding: 0 2px !important;
+  border: 0 !important;
+  border-radius: var(--so-r-control) !important;
+  background: transparent !important;
+  color: var(--so-ink) !important;
+  font-size: var(--so-fs-control) !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  cursor: pointer;
+}
+.so-compact [data-so="skipall"] .so-skipall-toggle span { color: inherit !important; }
+.so-compact [data-so="skipall"] .so-skipall-toggle::after {
+  content: "";
+  flex: none;
+  width: 30px;
+  height: 18px;
+  border-radius: var(--so-r-chip);
+  background: radial-gradient(circle at 9px 50%, var(--so-knob) 6px, transparent 6.5px), var(--so-line-strong);
+  transition: background-color .15s;
+}
+.so-compact [data-so="skipall"] .so-skipall-toggle:hover::after { background-color: color-mix(in srgb, var(--so-line-strong) 80%, var(--so-ink)); }
+.so-compact [data-so="skipall"] .so-skipall-toggle.ant-checkbox-wrapper-checked::after {
+  background: radial-gradient(circle at 21px 50%, var(--so-knob) 6px, transparent 6.5px), var(--so-tone);
+}
+
+/* 2b. button: links (Tutorial, Guidelines), code-switch 'Add', segment arrows share it */
+.so-compact [data-so="links"] a,
+.so-compact [data-so="code"] button {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: var(--so-h-control) !important;
+  padding: 0 8px !important;
+  border: 1px solid var(--so-line);
+  border-radius: var(--so-r-control);
+  background: var(--so-surface);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* 2c. answer chip: every LS radio / checkbox inside the questions */
+.so-compact [data-so="root"] .lsf-choices { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 !important; }
+.so-compact [data-so="root"] :is(label.ant-radio-wrapper, label.ant-checkbox-wrapper) {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--so-h-chip);
+  margin: 0;
+  padding: 0 8px;
+  border: 1px solid var(--so-line);
+  border-radius: var(--so-r-chip);
+  background: color-mix(in srgb, var(--so-tone, var(--so-line)) var(--so-choice-tint), var(--so-surface));
+  font-size: var(--so-fs-chip);
+  line-height: calc(var(--so-h-chip) - 2px);
+}
+.so-compact [data-so="root"] :is(label.ant-radio-wrapper, label.ant-checkbox-wrapper):not(.ant-radio-wrapper-checked, .ant-checkbox-wrapper-checked, .ant-radio-wrapper-disabled, .ant-checkbox-wrapper-disabled):hover {
+  background: var(--so-surface);
+}
+.so-compact [data-so="root"] :is(label.ant-radio-wrapper-checked, label.ant-checkbox-wrapper-checked) {
+  border-color: var(--so-tone);
+  background: var(--so-tone);
+  color: var(--so-on-tone);
+  font-weight: 600;
+}
+.so-compact [data-so="root"] :is(label.ant-radio-wrapper-checked, label.ant-checkbox-wrapper-checked):not(.so-skipall-toggle, .so-skip-chip)::before { content: "✓ "; white-space: pre; }
+.so-compact [data-so="root"] :is(label.ant-radio-wrapper, label.ant-checkbox-wrapper):focus-within { outline: 2px solid var(--so-tone); outline-offset: 2px; }
+.so-compact [data-so="root"] :is(.ant-radio, .ant-checkbox) { position: absolute; opacity: 0; width: 1px; height: 1px; overflow: hidden; }
+
+/* 2c'. skip chip: 'Skip this segment' is an answer of its own kind - slate, dashed, skip icon */
+.so-compact [data-so="skip"] .so-skip-chip { gap: 5px; border-style: dashed; color: var(--so-tone-skip); font-weight: 500; }
+.so-compact [data-so="skip"] .so-skip-chip.ant-checkbox-wrapper-checked { border-style: solid; color: var(--so-on-tone); }
+.so-compact [data-so="skip"] .so-skip-chip.ant-checkbox-wrapper-checked::before { background: var(--so-on-tone); }
+.so-compact [data-so="skip"] .so-skip-chip span { color: inherit; }
+
+/* 2d. key badge: LS renders a hotkey as '[g]' (three text nodes) or a bare span; show only the key.
+   ponytail: clipped to 1ch, so a multi-character hotkey would show its first character only */
+.so-compact :is([data-so="root"], .so-pager) sup.lsf-hint,
+.so-compact [data-so="labels"] .lsf-label__hotkey {
+  display: inline-block;
+  vertical-align: middle;
+  position: static;
+  margin: 0 3px 0 9px;
+  padding: 0;
+  width: 1ch;
+  overflow: hidden;
+  white-space: nowrap;
+  font: 600 10px/10px ui-monospace, Consolas, monospace !important;
+  border-radius: 2px;
+  --so-badge: color-mix(in srgb, var(--so-tone, var(--so-ink-2)) 12%, var(--so-surface));
+  background: var(--so-badge);
+  box-shadow: 0 0 0 3px var(--so-badge);
+  color: var(--so-ink-2);
+}
+.so-compact :is([data-so="root"], .so-pager) sup.lsf-hint { text-indent: -1ch; }
+.so-compact [data-so="root"] sup.lsf-hint.so-hint-wide { width: auto; text-indent: 0; }   /* our 'ctrl' hint: whole word, same chip */
+.so-compact [data-so="root"] :is(.ant-radio-wrapper-checked, .ant-checkbox-wrapper-checked):not(.so-skipall-toggle) sup.lsf-hint {
+  background: color-mix(in srgb, var(--so-on-tone) 25%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--so-on-tone) 25%, transparent);
+  color: var(--so-on-tone);
+}
+
+/* 2e. card: neutral surface with a subtle border */
+.so-compact :is([data-so="gender"], [data-so="dialect"], [data-so="micro"], [data-so="alt"], [data-so="trans"], [data-so="code"]),
+.so-compact [data-so="skip"].so-open,
+.so-compact [data-so="skipall"].so-open {
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 0 !important;                /* LS config adds margin-top: 8px to some boxes */
+  padding: 4px 10px !important;
+  border: 1px solid var(--so-line) !important;
+  border-radius: var(--so-r-card);
+  background: var(--so-surface) !important;
+}
+
+/* 2f. card title (LS h3); first title gets the tone dot; LS forces h1-h6 colour with !important */
+.so-compact [data-so="root"] :is([data-so="gender"], [data-so="dialect"], [data-so="micro"], [data-so="trans"], [data-so="code"], [data-so="skip"], [data-so="skipall"]) h3 {
+  margin: 0 0 4px !important;
+  font-size: var(--so-fs-title);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--so-tone) !important;
+}
+.so-compact :is([data-so="gender"], [data-so="dialect"], [data-so="micro"], [data-so="trans"], [data-so="code"]) h3:first-of-type::before,
+.so-compact :is([data-so="skip"], [data-so="skipall"]) h3::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+/* sub-question label inside a card ('Could possibly also be', 'Code-switch Language', ...) */
+.so-compact [data-so="alt"] h3,
+.so-compact [data-so="code"] > :nth-child(n+2) h3 {
+  margin: 0 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0;
+  text-transform: none !important;
+  color: var(--so-ink-2) !important;
+}
+.so-compact :is([data-so="alt"], [data-so="code"] > :nth-child(n+2)) h3::before { display: none !important; }
+
+/* 2g. note */
+.so-compact .so-note { align-self: start; padding: 10px 12px; border: 1px dashed var(--so-line-strong); border-radius: var(--so-r-card); color: var(--so-muted); font-size: 12px; }
+.so-compact .so-note2 { align-self: start; padding: 0 2px; color: var(--so-muted); font-size: 12px; }
+.so-compact :is(.so-note, .so-note2)[hidden] { display: none; }
+
+/* 2h. info button + popover */
+.so-compact .so-info { border: 0; background: transparent; color: var(--so-muted); cursor: pointer; font-size: 14px; padding: 2px 5px; }
+.so-compact label .so-info { color: inherit; font-size: 12px; padding: 0 0 0 4px; line-height: 1; }
+.so-compact .so-popover { max-width: 400px; white-space: pre-wrap; padding: 10px; border: 1px solid var(--so-line); border-radius: 8px; background: var(--so-surface); color: var(--so-ink); font: 12px system-ui; box-shadow: var(--so-shadow-pop); }
+
+/* ---------- 3. sound toolbar (both layouts) ---------- */
+.so-bar {
+  position: fixed; left: var(--so-geo-float-left, 540px); bottom: var(--so-geo-float-bottom, 9px); z-index: 2147483000;
+  display: flex; align-items: center; gap: 4px; padding: 4px 5px;
+  border: 1px solid var(--so-line); border-radius: var(--so-r-card); background: var(--so-surface);
+  box-shadow: var(--so-shadow);
+  font: 500 12px/1 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--so-ink); user-select: none;
+}
+.so-bar.so-inline { position: static; margin: 8px 0 2px; width: max-content; max-width: 100%; flex-wrap: wrap; box-shadow: none; z-index: auto; }
+.so-bar[hidden] { display: none !important; }
+.so-btn {
+  all: unset; box-sizing: border-box; height: 28px; min-width: 26px; padding: 0 8px; border-radius: var(--so-r-control);
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; color: var(--so-ink);
+  transition: background .12s, color .12s, box-shadow .12s;
+}
+.so-btn:hover:not(:disabled) { background: var(--so-accent-soft); }
+.so-btn:active:not(:disabled) { background: color-mix(in srgb, var(--so-accent) 18%, var(--so-surface)); }
+.so-btn:focus-visible { box-shadow: 0 0 0 2px var(--so-focus); }
+.so-btn:disabled { opacity: .38; cursor: default; }
+.so-btn svg { width: 14px; height: 14px; flex: none; }
+.so-update { background: var(--so-accent-soft); color: var(--so-accent); font-weight: 650; white-space: nowrap; }
+.so-update[hidden] { display: none; }
+.so-toggle[aria-pressed="true"] { background: var(--so-accent-soft); color: var(--so-accent); box-shadow: inset 0 0 0 1px var(--so-accent-line); }
+.so-speed { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; border-radius: var(--so-r-control); background: var(--so-subtle-2); cursor: pointer; }
+.so-speed-range { width: 96px; margin: 0; accent-color: var(--so-accent); cursor: pointer; }
+.so-compact .so-player .so-speed-range { width: 56px; }        /* room for Clear in the player row (row was 35 px too wide) */
+.so-speed-value { min-width: 3.2em; color: var(--so-accent); font-size: 11.5px; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.so-next {
+  display: inline-flex; align-items: center; justify-content: center; height: 24px; min-width: 24px; padding: 0 6px;
+  border-radius: var(--so-r-control); background: var(--so-subtle-2); color: var(--so-ink-2);
+  font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.so-next[hidden] { display: none; }
+.so-next[data-state="ready"] { background: var(--so-ok-bg); color: var(--so-ok); }
+.so-next[data-state="error"] { background: var(--so-err-bg); color: var(--so-err); }
+.so-next[data-state="warning"] { background: var(--so-warn-bg); color: var(--so-warn); font-weight: 600; }
+canvas.so-scrub-cursor { cursor: pointer !important; }
+.so-ov { display: block; width: 100%; height: 40px; margin: 6px 0 2px; border-radius: var(--so-r-control); background: var(--so-subtle); cursor: pointer; touch-action: none; }
+.so-notasks .lsf-label-view__table { display: none !important; }
+.so-lbar { display: inline-flex; align-items: center; gap: 2px; }
+.lsf-topbar:has(> .so-lbar) { display: flex !important; align-items: center; gap: 8px; }
+
+/* ---------- 4. compact frame: LS chrome around the editor ---------- */
+.so-compact .lsf-sidepanels__content { z-index: auto !important; }
+/* LS narrow mode drops the flex column when side panels move below the editor. */
+.so-compact .lsf-main-content { display: flex; flex-direction: column; padding-bottom: 0 !important; }          /* LS keeps 58 px for the bottom bar we moved up */
+.so-compact .lsf-main-view { min-height: 0; }
+.so-compact .lsf-wrapper_showingBottomBar { padding-bottom: 0 !important; }
+:root:not([data-color-scheme="dark"]) .so-compact .lsf-main-view__annotation {
+  --so-workspace: #fcfcfd;
+  --so-surface: #fff;
+  --so-line: #e3e5ee;
+  --so-line-soft: #eceef4;
+  background-color: var(--so-workspace);
+}
+.so-compact .lsf-main-view__annotation { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 8px 10px !important; }
+/* LS bottom bar (Undo, Redo, Reset, Settings, Update) shown inside the editor top bar */
+.so-compact .lsf-bottombar {
+  position: fixed !important; z-index: 200; width: auto !important; border: 0; background: transparent;
+  top: var(--so-geo-slot-top); right: var(--so-geo-slot-right); height: var(--so-geo-slot-height);
+}
+.so-compact .lsf-bottombar button { max-height: 30px; }
+.so-compact .lsf-topbar { padding-right: calc(var(--so-geo-bar-width, 0px) + 16px); }
+
+/* ---------- 5. compact layout ----------
+   Wide: video and transcription at left, player and questions in the middle, segments at right.
+   At 900px and below: video above transcription, player above links and segments, full-width questions below.
+   At 700px and below in height: tighter spacing and a capped video height. */
+.so-compact [data-so="root"] {
+  display: grid !important;
+  grid-template-columns: clamp(220px, 28%, 520px) auto minmax(0, 1fr) clamp(250px, 20vw, 320px);
+  grid-template-rows: auto auto auto auto auto auto minmax(0, 1fr);
+  align-content: start;
+  gap: var(--so-gap);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.so-compact :is([data-so="flat"], [data-so="form"]):not([style*="display: none"]):not([style*="display:none"]) { display: contents !important; }
+.so-compact :is([data-so="pagesegs"], [data-so="title"], [data-so="status"], [data-so="instr"], [data-so="def"]) { display: none !important; }
+
+/* left column */
+.so-compact [data-so="vcol"] { grid-column: 1; grid-row: 1 / span 2; min-width: 0; max-width: none !important; width: auto !important; flex: none !important; }
+.so-compact [data-so="vcol"] > :is(h1, h2, h3, h4),
+.so-compact [data-so="vcol"] .lsf-timeline,
+.so-compact-preferred .lsf-video-segmentation .lsf-timeline { display: none !important; }
+.so-compact .lsf-video__main { height: auto !important; aspect-ratio: 16 / 9; }
+.so-compact .lsf-video { height: auto !important; }
+.so-compact [data-so="trans"] { grid-column: 1; grid-row: 3 / -1; }
+.so-compact .so-note { grid-column: 1; grid-row: 3; }
+
+/* player area: Add Segment left, Skip-entire-video switch right (next to the links), then wave + player row.
+   The wave fills the media rows, which can grow when the player controls wrap. */
+.so-compact [data-so="acol"] {
+  grid-column: 2 / 4; grid-row: 1 / span 2; min-width: 0;
+  display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto; grid-template-rows: auto 1fr;
+  grid-template-areas: "labels . skipall" "audio audio audio";
+  gap: var(--so-gap); align-items: center;
+}
+.so-compact [data-so="links"] { grid-column: 4; grid-row: 1; justify-self: stretch; align-self: start; z-index: 2; display: flex !important; gap: 5px !important; width: auto !important; margin: 0 !important; }
+.so-compact [data-so="links"] div { border: 0 !important; background: transparent !important; padding: 0 !important; }
+/* the two links fill the segments column, so every gutter in the top row is the same --so-gap */
+.so-compact [data-so="links"] > * { flex: 1 1 auto; }
+.so-compact [data-so="links"] a { width: 100%; justify-content: center; white-space: nowrap; }
+.so-compact [data-so="skipall"] { grid-area: skipall; margin: 0 !important; padding: 0 !important; border: 0 !important; background: transparent !important; --so-tone: var(--so-tone-skip); }
+.so-compact [data-so="skipall"].so-open {
+  grid-column: 1 / -1; grid-row: 1 / -1; align-self: start; padding: 6px 10px 8px !important;
+  display: grid !important; grid-template-columns: minmax(0, 1fr) auto; align-items: start; column-gap: 10px;
+}
+/* open: reasons left, the switch stays top-right */
+.so-compact [data-so="skipall"].so-open > .lsf-choices { grid-column: 2; grid-row: 1; }
+.so-compact [data-so="skipall"].so-open > :not(.lsf-choices) { grid-column: 1; grid-row: 1; margin: 0 !important; padding: 0 !important; border: 0 !important; }
+.so-compact [data-so="labels"] { grid-area: labels; margin: 0; display: flex !important; flex-wrap: wrap; }
+.so-compact [data-so="audio"] { grid-area: audio; align-self: stretch; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.so-compact .so-aplayer {
+  /* The old [class*="spread"] rule gave this row a 4px column gap.
+     At 1280px the four groups need 584px plus gaps; 8px gaps exceed the row by 6px and wrap the time boxes. */
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2px 4px;
+  padding-top: 0 !important; padding-bottom: 0 !important; min-height: 0 !important;
+}
+.so-compact .so-bar.so-player { position: static; display: inline-flex; flex-wrap: nowrap; width: auto; margin: 0; padding: 0; border: 0; box-shadow: none; }
+.so-compact .so-player .so-toggle span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.so-compact .so-ov { height: 24px; margin: 4px 0 0; }
+.so-compact.so-f-preview .lsf-audio-tag > :first-child > :first-child { scrollbar-width: none; }  /* the overview strip does that job */
+/* The wave starts at 60px and grows to fill the media rows without letting the canvas size the grid. */
+.so-compact .lsf-audio-tag > div:first-child { flex: 1 1 60px; min-height: 60px; height: auto !important; contain: size; }
+.so-compact .lsf-audio-tag > div:first-child canvas { height: 100% !important; }
+.so-compact [data-so="audio"] :is(.lsf-timer-duration-control, .lsf-time-box) { width: auto; }
+.so-compact [data-so="audio"] .lsf-time-box__input-time { width: 74px; padding: 0 4px; font-size: 11.5px; }
+
+/* questions */
+.so-compact [data-so="gender"] { grid-column: 2; grid-row: 3; }
+.so-compact [data-so="dialect"] { grid-column: 3 / 5; grid-row: 3; }
+.so-compact [data-so="skip"] { grid-column: 3 / 5; grid-row: 3; }
+.so-compact [data-so="skip"].so-open { grid-column: 2 / 5; }
+.so-compact [data-so="micro"] { grid-column: 2 / 5; grid-row: 4; }
+.so-compact [data-so="alt"] { grid-column: 2 / 5; grid-row: 5; }
+.so-compact [data-so="code"] { grid-column: 2 / 5; grid-row: 6; align-self: start; }
+.so-compact .so-note2 { grid-column: 2 / 5; grid-row: 4; }
+.so-compact [data-so="root"]:has([data-so="skipall"].so-open) .so-note2 { grid-row: 3; }
+
+/* ---------- 6. question cards ---------- */
+.so-compact [data-so="gender"] { --so-tone: var(--so-tone-gender); display: block !important; }
+.so-compact [data-so="dialect"] { --so-tone: var(--so-tone-dialect); }
+.so-compact [data-so="micro"] { --so-tone: var(--so-tone-micro); display: block !important; }
+.so-compact [data-so="alt"] { --so-tone: var(--so-tone-alt); }
+.so-compact [data-so="trans"] { --so-tone: var(--so-tone-text); }
+.so-compact [data-so="code"] { --so-tone: var(--so-tone-code); }
+.so-compact [data-so="skip"] { --so-tone: var(--so-tone-skip); }
+
+/* gender, dialect: title above the answers (LS wraps them in an inline flex row) */
+.so-compact :is([data-so="gender"], [data-so="dialect"]) > div { display: block !important; }
+.so-compact :is([data-so="gender"], [data-so="dialect"], [data-so="micro"]) h3 { display: block !important; }
+
+/* dialect: 'Skip this segment' is its last answer, on its own row under the four answers */
+.so-compact [data-so="dialect"] .lsf-choices { margin-bottom: 27px !important; }
+.so-compact [data-so="skip"]:not(.so-open) {
+  z-index: 3; justify-self: start; align-self: end; width: auto !important; min-height: 0 !important;
+  margin: 0 0 7px 12px !important; padding: 0 !important; border: 0 !important; background: transparent !important;
+}
+/* skip reasons open: title + reasons left, the skip chip top-right */
+.so-compact [data-so="skip"].so-open { align-self: start; display: grid !important; grid-template-columns: minmax(0, 1fr) auto; align-items: start; column-gap: 10px; padding: 6px 10px 8px !important; }
+.so-compact [data-so="skip"].so-open > [data-so="why"] { grid-column: 1; grid-row: 1; margin: 0 !important; padding: 0 !important; border: 0 !important; }
+.so-compact [data-so="skip"].so-open > :not([data-so="why"]) { grid-column: 2; grid-row: 1; }
+
+/* could-also-be: under micro-dialect, label column aligned */
+.so-compact [data-so="alt"] {
+  display: flex !important; flex-wrap: wrap; align-items: center; gap: 4px 10px;
+  padding-top: 5px !important; padding-bottom: 5px !important;
+}
+.so-compact [data-so="alt"] h3 { flex: none; min-width: 150px; line-height: 1.3; white-space: nowrap; color: var(--so-tone-alt) !important; }
+.so-compact [data-so="alt"] :is(label.ant-radio-wrapper-checked, label.ant-checkbox-wrapper-checked) { border-color: var(--so-alt-sel-line); background: var(--so-alt-sel-bg); color: var(--so-alt-sel-ink); }
+.so-compact [data-so="alt"] :is(label.ant-radio-wrapper-checked, label.ant-checkbox-wrapper-checked) * { color: inherit; }
+.so-compact [data-so="alt"] .lsf-choices { display: inline-flex !important; }
+
+/* transcription: the text box fills the card down to the bottom */
+.so-compact [data-so="trans"] { min-height: 0; display: flex; flex-direction: column; }
+.so-compact [data-so="trans"] :is(.lsf-text-area, .ant-form) { display: flex; flex-direction: column; min-height: 0; }
+.so-compact [data-so="trans"] :is(.lsf-text-area, textarea, .ant-form) { flex: 1; }
+.so-compact [data-so="trans"] :is(.lsf-text-area > div, .lsf-row, .lsf-textarea__region) { flex: 1; min-height: 0; display: flex; align-items: stretch; }
+.so-compact [data-so="trans"] .lsf-text-area > div { flex-direction: column; }
+.so-compact [data-so="trans"] .lsf-textarea__region > div:first-child { flex: 1; min-height: 0; overflow: auto; }
+.so-compact [data-so="trans"] .lsf-textarea__actions { align-self: flex-start; }
+.so-compact [data-so="trans"] :is(textarea, .lsf-text-area) { direction: rtl; text-align: right; font-size: 16px; }
+.so-compact [data-so="trans"] .lsf-textarea__region p { font-size: 16px; line-height: 1.6; }
+.so-compact [data-so="trans"] .ant-form { font-size: 11px; }
+/* LS's 'Press Shift + Enter to Add' line under text boxes: costs a row, the Add button stays */
+.so-compact.so-f-segmentkeys [data-so="root"] [data-testid="textarea-instruction"] { display: none; }
+.so-compact [data-so="trans"] button { height: auto; padding: 2px 8px; font-size: 11px; }
+
+/* code-switching: 'Code-switching? Yes No' line, Language line, phrase line (label, one-line input, Add) */
+.so-compact [data-so="code"] { position: relative; }
+.so-compact [data-so="code"] h3 { display: inline-block !important; vertical-align: middle; margin: 0 10px 0 0 !important; }
+.so-compact [data-so="code"] .lsf-choices { display: inline-flex !important; vertical-align: middle; width: auto !important; flex: 0 1 auto !important; }
+.so-compact [data-so="code"] > :nth-child(n+2) { margin: 0 !important; padding: 0 !important; border: 0 !important; }
+.so-compact [data-so="code"] > :nth-child(n+2) > div { display: flex !important; flex-direction: column !important; gap: 2px !important; margin-top: 2px; }
+.so-compact [data-so="code"] > :nth-child(n+2) > div > div {
+  display: flex !important; flex-wrap: wrap; align-items: center; gap: 4px 8px;
+  width: auto !important; max-width: none !important; flex: none !important; margin: 0 !important; padding: 0 !important;
+}
+.so-compact [data-so="code"] > :nth-child(n+2) > div > div:last-child { flex-wrap: nowrap !important; }
+.so-compact [data-so="code"] div:has(> .lsf-text-area textarea) { align-self: stretch; min-width: 0; }
+.so-compact [data-so="code"] .lsf-text-area { flex: 1 1 300px !important; min-width: 0; margin: 0 !important; }
+.so-compact [data-so="code"] :is(.ant-form-item, .ant-form) { margin: 0 !important; }
+.so-compact [data-so="code"] .ant-form-item { flex: 1; min-width: 0; }
+.so-compact [data-so="code"] .ant-form-item-control-input-content { flex-direction: row !important; justify-content: flex-start !important; align-items: center; gap: 6px; }
+.so-compact [data-so="code"] .ant-form-item-control-input-content > .flex { flex: none; width: auto !important; margin: 0 !important; padding: 0 !important; }
+.so-compact [data-so="code"] .ant-form-item-control-input-content > .flex > .flex:first-child,
+.so-compact [data-so="code"] .ant-form-item-control-input-content > .flex p { display: none !important; }
+.so-compact [data-so="code"] textarea { height: 28px !important; min-height: 28px !important; padding: 3px 8px !important; resize: none; font-size: 13px; unicode-bidi: plaintext; text-align: right; }
+.so-compact [data-so="code"] .ant-form-item-control-input-content > textarea { flex: 1 1 auto !important; width: auto !important; min-width: 120px; }
+/* language = Other: its box sits at the right end of the Yes/No line (free space), not on a new line */
+.so-compact [data-so="code"] div:has(> .lsf-text-area input) { position: absolute; top: 4px; right: 12px; width: 260px; margin: 0 !important; }
+.so-compact [data-so="code"] div:has(> .lsf-text-area input) :is(.lsf-text-area, .ant-form, .ant-form-item) { margin: 0 !important; }
+.so-compact [data-so="code"] .lsf-text-area input { height: var(--so-h-control); padding: 2px 8px; border-radius: var(--so-r-control); font-size: 12.5px; }
+
+/* ---------- 7. segments panel ---------- */
+.so-compact .so-segs {
+  grid-column: 4; grid-row: 1 / span 2; align-self: stretch; margin-top: calc(var(--so-h-control) + var(--so-gap)); min-height: 0; contain: size;
+  display: flex; flex-direction: column; overflow: hidden;
+  font-size: 12px;
+  border: 1px solid var(--so-line); border-radius: var(--so-r-card);
+  background: var(--so-surface);
+}
+.so-compact .so-segs[hidden] { display: none; }
+.so-compact .so-segs-head {
+  display: flex; align-items: center; gap: 6px; padding: 5px 6px 5px 10px; border-bottom: 1px solid var(--so-line-soft);
+  color: var(--so-tone-segments); font-size: var(--so-fs-small); font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+}
+.so-compact .so-segs-count { flex: 1; color: var(--so-muted); font-size: var(--so-fs-small); font-weight: 400; letter-spacing: 0; text-transform: none; }
+.so-compact .so-segs-nav {
+  width: 22px; height: 22px; padding: 0; border: 1px solid var(--so-line); border-radius: var(--so-r-control);
+  background: var(--so-surface); color: var(--so-ink-2); cursor: pointer;
+}
+.so-compact .so-segs-nav:disabled { opacity: .38; cursor: default; }
+.so-compact .so-segs-list { flex: 1; min-height: 0; overflow: auto; padding: 3px 4px; }
+.so-compact .so-segs-playall { width: auto; padding: 0 8px; font-size: var(--so-fs-small); font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--so-accent-strong); }
+.so-compact .so-segs-playall[aria-pressed="true"] { border-color: var(--so-accent); background: var(--so-accent-soft); }
+.so-compact .so-segs-foot { flex: none; padding: 4px 10px; border-top: 1px solid var(--so-line-soft); color: var(--so-muted); font-size: var(--so-fs-small); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.so-compact .so-segs-row {
+  box-sizing: border-box; display: flex; align-items: center; gap: 6px; width: 100%; height: 30px; padding: 0 6px;
+  border: 0; border-radius: var(--so-r-control); background: transparent; color: var(--so-ink);
+  font: inherit; font-size: 12.5px; text-align: left; cursor: pointer;
+}
+.so-compact .so-segs-item { display: flex; align-items: center; gap: 2px; }
+.so-compact .so-segs-item > .so-segs-row { flex: 1; min-width: 0; }
+.so-compact .so-segs-del {
+  flex: none; width: 24px; height: 24px; padding: 0; border: 0; border-radius: var(--so-r-control);
+  background: transparent; color: var(--so-muted); font-size: 12px; cursor: pointer; opacity: .45;
+}
+.so-compact .so-segs-del svg { width: 14px; height: 14px; }
+.so-compact .so-segs-item:hover .so-segs-del, .so-compact .so-segs-del:focus-visible { opacity: 1; }
+.so-compact .so-segs-del:hover { background: var(--so-err-bg); color: var(--so-err); }
+.so-compact .so-segs-confirm { height: 30px; padding: 0 4px 0 8px; gap: 4px; border-radius: var(--so-r-control); background: var(--so-err-bg); }
+.so-compact .so-segs-ask { flex: 1; min-width: 0; color: var(--so-err); font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.so-compact .so-segs-confirm .so-segs-nav { width: auto; padding: 0 7px; font-size: var(--so-fs-small); font-weight: 600; letter-spacing: 0; text-transform: none; }
+.so-compact .so-segs-yes { border-color: var(--so-err); background: var(--so-err); color: var(--so-on-tone); }
+.so-compact .so-segs-row[aria-current="true"] { background: var(--so-accent-soft); box-shadow: inset 0 0 0 1px var(--so-tone-segments); color: var(--so-accent-strong); }
+.so-compact .so-segs-num { width: 12px; flex: none; font-weight: 700; }
+.so-compact .so-segs-time { flex: 1; font-size: 11.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.so-compact .so-segs-state { width: 20px; height: 20px; flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; }
+.so-compact .so-segs-state[data-state="done"] { background: var(--so-ok-bg); color: var(--so-ok); }
+.so-compact .so-segs-state[data-state="todo"] { background: var(--so-warn-bg); color: var(--so-warn); }
+.so-compact .so-segs-state:is([data-state="skip"], [data-state="unknown"]) { background: var(--so-subtle-2); color: var(--so-ink-2); }
+.so-compact .so-segs-state[data-state="unknown"] { color: var(--so-muted); }
+
+/* Responsive compact layout */
+@media (max-width: 900px) {
+  .so-compact [data-so="root"] {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-rows: none;
+    grid-template-areas:
+      "video player"
+      "trans links"
+      "trans segs"
+      "gender gender"
+      "dialect dialect"
+      "micro micro"
+      "alt alt"
+      "code code";
+  }
+  .so-compact [data-so="vcol"] { grid-area: video; }
+  .so-compact .so-segs { grid-area: segs; height: 140px; margin-top: 0; }
+  .so-compact [data-so="links"] { grid-area: links; }
+  .so-compact [data-so="acol"] { grid-area: player; }
+  .so-compact [data-so="gender"],
+  .so-compact [data-so="root"]:has([data-so="skipall"].so-open) .so-note2 { grid-area: gender; }
+  .so-compact :is([data-so="dialect"], [data-so="skip"], [data-so="skip"].so-open) { grid-area: dialect; }
+  .so-compact :is([data-so="micro"], .so-note2) { grid-area: micro; }
+  .so-compact [data-so="alt"] { grid-area: alt; }
+  .so-compact [data-so="code"] { grid-area: code; }
+  .so-compact :is([data-so="trans"], .so-note) { grid-area: trans; }
+  .so-compact [data-so="code"] div:has(> .lsf-text-area input) { position: static; max-width: 100%; }
+}
+
+@media (max-height: 700px) {
+  .so-compact :is([data-so="root"], [data-so="acol"]) { row-gap: calc(var(--so-gap) * .75); }
+  .so-compact .lsf-video__main {
+    --so-video-height: min(30vh, 210px);
+    width: min(100%, calc(var(--so-video-height) * 16 / 9));
+    max-height: var(--so-video-height);
+    margin-inline: auto;
+  }
+}
+
+/* ---------- 8. task pager ---------- */
+/* One centred group: Prev, up to seven tiles, Next. The current tile holds the position pop-up. */
+.so-pager { position: relative; box-sizing: border-box; flex: none; margin: 0 -10px -8px; padding: 6px 10px 4px; display: flex; justify-content: center; border-top: 1px solid var(--so-line); background: var(--so-subtle); font-size: var(--so-fs-control); }
+.so-pager > .so-update { position: absolute; right: 10px; top: calc(50% + 1px); transform: translateY(-50%); }
+.so-pager-centre { display: grid; justify-items: center; min-width: 0; max-width: 100%; }
+.so-pager-row { display: flex; align-items: center; gap: var(--so-gap); min-width: 0; max-width: 100%; }
+.so-pager-nav { flex: none; white-space: nowrap; }
+.so-pager-blocks { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 64px); min-width: 0; gap: 4px; }
+.so-pager-block { display: grid; justify-items: center; align-content: center; gap: 1px; min-width: 0; min-height: 40px; padding: 3px 4px; border: 1px solid var(--so-line); border-radius: var(--so-r-control); font: inherit; line-height: 1.15; color: var(--so-ink); background: var(--so-surface); cursor: pointer; }
+.so-pager-block:not([aria-current]):hover { border-color: var(--so-focus); background: var(--so-accent-soft); }
+.so-pager-block:focus-visible { outline: 2px solid var(--so-focus); outline-offset: 1px; }
+.so-pager-block[aria-current="page"] { border-color: var(--so-accent); box-shadow: inset 0 0 0 1px var(--so-accent), var(--so-shadow); cursor: default; }
+.so-pager-top { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; }
+.so-pager-dot { flex: none; width: 8px; height: 8px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid var(--so-line-strong); }
+.so-pager-block[data-annotation="submitted"] .so-pager-dot { background: var(--so-ok); border-color: var(--so-ok); }
+.so-pager-block[data-annotation="draft"] .so-pager-dot { background: var(--so-warn); border-color: var(--so-warn); }
+.so-pager-block[data-annotation="working"] .so-pager-dot { background: var(--so-accent); border-color: var(--so-accent); }
+.so-pager-block[data-annotation="skipped"] .so-pager-dot { background: var(--so-muted); border-color: var(--so-muted); }
+.so-pager-block:is([data-annotation="checking"], [data-annotation="unknown"]) .so-pager-dot { border-style: dashed; }
+.so-pager-value { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; }
+.so-pager-media { display: inline-flex; align-items: center; justify-content: center; gap: 2px; max-width: 100%; min-height: 14px; overflow: hidden; color: var(--so-muted); font-size: var(--so-fs-small); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.so-pager-cache { display: inline-flex; flex: none; }
+.so-pager-cache svg { width: 12px; height: 12px; }
+.so-pager-block[data-state="ready"] .so-pager-cache { color: var(--so-ok); }
+.so-pager-block[data-state="loading"] .so-pager-media { color: var(--so-accent-strong); }
+.so-pager-block[data-state="error"] .so-pager-cache { color: var(--so-err); }
+/* position pop-up above the current tile: on hover / keyboard focus, and always for the unsaved-work warning */
+.so-pager-block[aria-current="page"] { position: relative; }
+.so-pager-position { position: absolute; bottom: calc(100% + 7px); left: 50%; z-index: 5; padding: 3px 8px; border-radius: var(--so-r-control); background: var(--so-ink); color: var(--so-surface); font-size: var(--so-fs-small); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; box-shadow: var(--so-shadow-pop); pointer-events: none; opacity: 0; transform: translate(-50%, 3px); transition: opacity .12s, transform .12s; }
+.so-pager-position::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border: 5px solid transparent; border-top-color: var(--so-ink); }
+.so-pager-block[aria-current="page"]:is(:hover, :focus-visible) .so-pager-position, .so-pager-position.so-pager-warn { opacity: 1; transform: translate(-50%, 0); }
+.so-pager-position.so-pager-warn { background: var(--so-warn); }
+.so-pager-position.so-pager-warn::after { border-top-color: var(--so-warn); }
+@media (max-width: 780px) { .so-pager-nav { padding-inline: 6px; } .so-pager-blocks { grid-auto-columns: minmax(0, 52px); } }

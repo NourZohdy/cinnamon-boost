@@ -1,0 +1,9 @@
+﻿node_modules/
+dist/
+compressed-videos/
+
+# Local notes and AI-agent working files: kept on this PC, not in the repo
+.feature/
+AGENTS.md
+CODEX_HANDOFF.md
+HANDOVER.md

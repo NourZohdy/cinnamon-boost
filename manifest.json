@@ -1,0 +1,65 @@
+{
+    "manifest_version":  3,
+    "name":  "LS Sound only",
+    "version":  "0.32.0",
+    "homepage_url":  "https://github.com/NourZohdy/ls-sound-only",
+    "description":  "Faster, sound-first Label Studio for audio/video transcription: compact layout, segment list, preloading, local cache and shortcuts.",
+    "icons":  {
+                  "16":  "icons/icon16.png",
+                  "48":  "icons/icon48.png",
+                  "128":  "icons/icon128.png"
+              },
+    "permissions":  [
+                        "storage"
+                    ],
+    "action":  {
+                   "default_popup":  "popup.html",
+                   "default_title":  "LS Sound only: settings",
+                   "default_icon":  {
+                                        "16":  "icons/icon16.png",
+                                        "48":  "icons/icon48.png",
+                                        "128":  "icons/icon128.png"
+                                    }
+               },
+    "background":  {
+                       "service_worker":  "reload.js"
+                   },
+    "content_scripts":  [
+                            {
+                                "matches":  [
+                                                "https://annotation.dlnlp.ai/*"
+                                            ],
+                                "js":  [
+                                           "settings.js",
+                                           "update.js",
+                                           "helpers.js",
+                                           "runtime.js",
+                                           "features/cache.js",
+                                           "features/preload.js",
+                                           "features/toolbar.js",
+                                           "features/sound.js",
+                                           "features/layout.js",
+                                           "features/segments.js",
+                                           "features/pager.js",
+                                           "features/gestures.js",
+                                           "features/overview.js",
+                                           "features/keyboard.js",
+                                           "content.js"
+                                       ],
+                                "world":  "MAIN",
+                                "run_at":  "document_start"
+                            },
+                            {
+                                "matches":  [
+                                                "https://annotation.dlnlp.ai/*"
+                                            ],
+                                "js":  [
+                                           "reload.js"
+                                       ],
+                                "css":  [
+                                            "content.css"
+                                        ],
+                                "run_at":  "document_start"
+                            }
+                        ]
+}

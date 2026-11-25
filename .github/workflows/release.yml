@@ -1,0 +1,35 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify release tag
+        run: |
+          $version = (Get-Content -Raw manifest.json | ConvertFrom-Json).version
+          if ($env:GITHUB_REF_NAME -cne "v$version") {
+            throw "Tag $env:GITHUB_REF_NAME must match manifest version v$version"
+          }
+          "LS_SOUND_VERSION=$version" >> $env:GITHUB_ENV
+      - run: npm ci
+      - run: npm test
+      - run: npm run package
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $version = $env:LS_SOUND_VERSION
+          gh release create "$tag" dist/ls-sound-only.zip --title "LS Sound only $version" --generate-notes --verify-tag

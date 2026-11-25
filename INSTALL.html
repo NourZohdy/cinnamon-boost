@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install LS Sound only</title>
+<style>
+  :root {
+    --bg: #f6f7fb; --card: #ffffff; --ink: #1d2433; --muted: #5d6678; --line: #dde1ea;
+    --accent: #3b4fd8; --accent-soft: #e8ebff; --ring: #ff6b2c; --ok: #1f8a4c; --warn-bg: #fff6e0; --warn-line: #f0c75e;
+    --chrome: #eef1f6; --chrome-dark: #dfe3ea;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 "Segoe UI", system-ui, -apple-system, Arial, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+  header img { width: 48px; height: 48px; }
+  h1 { font-size: 26px; margin: 0; flex: 1; min-width: 220px; }
+  .lang { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--card); }
+  .lang button { border: 0; background: none; padding: 6px 16px; font: inherit; cursor: pointer; color: var(--muted); }
+  .lang button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  .intro { color: var(--muted); margin: 0 0 24px; }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin: 0 0 18px; display: grid; grid-template-columns: 44px 1fr; gap: 4px 16px; }
+  .num { grid-row: span 2; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 20px; display: grid; place-items: center; }
+  .step h2 { font-size: 19px; margin: 6px 0 4px; }
+  .step p { margin: 0 0 10px; }
+  .pic { grid-column: 1 / -1; margin-top: 10px; direction: ltr; text-align: left; overflow-x: auto; }
+  code, .kbd { font-family: Consolas, "Cascadia Mono", monospace; background: var(--accent-soft); border-radius: 5px; padding: 1px 6px; direction: ltr; unicode-bidi: isolate; }
+  .note { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 10px; padding: 10px 14px; margin: 8px 0 0; }
+  .extra { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin: 0 0 18px; }
+  .extra h2 { font-size: 19px; margin: 0 0 8px; }
+  .extra ol, .extra ul { margin: 0; padding-inline-start: 22px; }
+  table { border-collapse: collapse; width: 100%; }
+  td { border-top: 1px solid var(--line); padding: 7px 8px; vertical-align: top; }
+  td:first-child { white-space: nowrap; width: 1%; }
+  /* language switch */
+  body[data-lang="en"] [lang="ar"], body[data-lang="ar"] .en { display: none !important; }
+  body[data-lang="ar"] main { direction: rtl; text-align: right; font-family: "Segoe UI", Tahoma, Arial, sans-serif; }
+  body[data-lang="ar"] .pic { text-align: left; }
+  /* drawn screens */
+  .screen { display: inline-block; min-width: 520px; background: #fff; border: 1px solid #c9ceda; border-radius: 10px; box-shadow: 0 4px 14px rgba(20, 30, 60, .10); overflow: hidden; font: 14px/1.4 "Segoe UI", Arial, sans-serif; color: #202124; }
+  .titlebar { background: var(--chrome); padding: 8px 12px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--chrome-dark); }
+  .dots span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #c4c9d4; margin-right: 5px; }
+  .omni { flex: 1; background: #fff; border-radius: 999px; padding: 5px 14px; border: 1px solid var(--chrome-dark); }
+  .body { padding: 16px; }
+  .ring { outline: 3px solid var(--ring); outline-offset: 3px; border-radius: 8px; position: relative; }
+  .tag { position: absolute; top: -14px; right: -14px; width: 26px; height: 26px; border-radius: 50%; background: var(--ring); color: #fff; font-weight: 700; display: grid; place-items: center; font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,.2); }
+  .row { display: flex; align-items: center; gap: 12px; }
+  .spacer { flex: 1; }
+  .toggle { display: inline-block; width: 36px; height: 20px; border-radius: 999px; background: #c4c9d4; position: relative; vertical-align: middle; }
+  .toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+  .toggle.on { background: #1a73e8; }
+  .toggle.on::after { left: 19px; }
+  .btn { display: inline-block; border: 1px solid #c4c9d4; border-radius: 6px; padding: 6px 12px; background: #fff; color: #1a73e8; font-weight: 600; }
+  .btn.primary { background: #1a73e8; color: #fff; border-color: #1a73e8; }
+  .menu { display: inline-block; background: #fff; border: 1px solid #c9ceda; border-radius: 8px; box-shadow: 0 4px 14px rgba(20,30,60,.12); padding: 4px 0; min-width: 210px; }
+  .menu div { padding: 6px 14px; }
+  .menu .hl { background: #e8f0fe; }
+  .file { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; width: 120px; text-align: center; font-size: 12px; }
+  .zip { width: 46px; height: 56px; border-radius: 4px; background: linear-gradient(#f7c948, #e9a91a); position: relative; }
+  .zip::after { content: ""; position: absolute; left: 20px; top: 0; width: 6px; height: 34px; background: repeating-linear-gradient(#6b5300 0 4px, #fff3 4px 8px); }
+  .folder { width: 22px; height: 16px; background: #f2c14e; border-radius: 2px 4px 3px 3px; display: inline-block; vertical-align: middle; margin-right: 8px; }
+  .list div { padding: 5px 10px; border-radius: 4px; }
+  .list .sel { background: #cce4ff; }
+  .side { width: 140px; background: #f7f8fb; border-right: 1px solid #e3e6ee; padding: 10px; color: #5d6678; font-size: 13px; }
+  .card { width: 300px; border: 1px solid #dadce0; border-radius: 8px; padding: 14px; }
+  .card img { width: 40px; height: 40px; }
+  .muted { color: #5f6368; font-size: 12px; }
+  .shot { max-width: 100%; border: 1px solid #c9ceda; border-radius: 10px; box-shadow: 0 4px 14px rgba(20,30,60,.10); display: block; }
+  .arrow { color: var(--ring); font-weight: 700; font-size: 22px; padding: 0 6px; }
+  @media (max-width: 600px) { .step { grid-template-columns: 1fr; } .num { grid-row: auto; } }
+</style>
+</head>
+<body data-lang="en">
+<main>
+  <header>
+    <img src="icons/icon128.png" alt="">
+    <h1><span class="en">Install LS Sound only</span><span lang="ar">تثبيت إضافة LS Sound only</span></h1>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-set="en" aria-pressed="true">English</button>
+      <button type="button" data-set="ar" aria-pressed="false">العربية</button>
+    </div>
+  </header>
+  <p class="intro">
+    <span class="en">A Chrome extension that makes Label Studio faster and easier for audio and video transcription. Installing takes about 2 minutes and is done only once. Follow the steps in order.</span>
+    <span lang="ar">إضافة لمتصفح Chrome تجعل Label Studio أسرع وأسهل في تفريغ الصوت والفيديو. التثبيت يستغرق دقيقتين تقريبًا، ويتم مرة واحدة فقط. اتبع الخطوات بالترتيب.</span>
+  </p>
+
+  <!-- 1 -->
+  <section class="step">
+    <div class="num">1</div>
+    <h2><span class="en">Unzip the file into a folder you will keep</span><span lang="ar">فكّ ضغط الملف في مجلد ستحتفظ به</span></h2>
+    <div>
+      <p class="en">Right-click the file <code>ls-sound-only.zip</code> and choose <b>Extract All…</b>. Windows suggests the Downloads folder: click <b>Browse…</b> and choose a place you will keep, for example <code>Documents\ls-sound-only</code>, then click <b>Extract</b>.</p>
+      <p lang="ar">انقر بزر الفأرة <b>الأيمن</b> على الملف <code>ls-sound-only.zip</code> واختر <b>Extract All…</b> (استخراج الكل). يقترح Windows مجلد التنزيلات: اضغط <b>Browse…</b> (استعراض) واختر مكانًا ستحتفظ به، مثل <code>Documents\ls-sound-only</code>، ثم اضغط <b>Extract</b> (استخراج).</p>
+      <p class="note"><span class="en">Do not leave it in Downloads and do not delete the folder later: if the folder is deleted or moved, the extension stops working.</span><span lang="ar">لا تتركه في مجلد التنزيلات ولا تحذف المجلد لاحقًا: إذا حُذف المجلد أو نُقل، تتوقف الإضافة عن العمل.</span></p>
+    </div>
+    <div class="pic">
+      <div class="screen"><div class="body row" style="align-items:flex-start;gap:16px">
+        <div class="file"><div class="zip"></div>ls-sound-only.zip</div>
+        <div class="menu">
+          <div>Open</div>
+          <div class="hl ring">Extract All…<span class="tag">1</span></div>
+          <div>Share</div>
+          <div>Copy</div>
+          <div>Rename</div>
+        </div>
+        <div style="align-self:center" class="arrow">→</div>
+        <div style="align-self:center">
+          <div class="muted">Files will be extracted to this folder:</div>
+          <div class="row" style="gap:8px;margin:4px 0 12px"><div style="border:1px solid #c4c9d4;border-radius:4px;padding:4px 8px;white-space:nowrap">C:\…\Documents\ls-sound-only</div>
+          <span class="btn ring">Browse…<span class="tag">2</span></span></div>
+          <span class="btn primary ring">Extract<span class="tag">3</span></span>
+        </div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="step">
+    <div class="num">2</div>
+    <h2><span class="en">Open the Extensions page in Chrome</span><span lang="ar">افتح صفحة الإضافات في Chrome</span></h2>
+    <div>
+      <p class="en">Open a new tab in Chrome, type <code>chrome://extensions</code> in the address bar and press <span class="kbd">Enter</span>. (In Microsoft Edge type <code>edge://extensions</code>.)</p>
+      <p lang="ar">افتح علامة تبويب جديدة في Chrome، واكتب في شريط العنوان <code>chrome://extensions</code> ثم اضغط <span class="kbd">Enter</span>. (في متصفح Edge اكتب <code>edge://extensions</code>.)</p>
+    </div>
+    <div class="pic">
+      <div class="screen"><div class="titlebar"><span class="dots"><span></span><span></span><span></span></span>
+        <div class="omni ring">chrome://extensions<span class="tag">1</span></div></div>
+        <div class="body muted">↵ Enter</div></div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="step">
+    <div class="num">3</div>
+    <h2><span class="en">Turn on “Developer mode”</span><span lang="ar">شغّل «وضع المطوّر» (Developer mode)</span></h2>
+    <div>
+      <p class="en">At the top right of the page, click the <b>Developer mode</b> switch so it turns blue.</p>
+      <p lang="ar">في أعلى الصفحة يوجد مفتاح <b>Developer mode</b> (وضع المطوّر). اضغط عليه ليصبح لونه أزرق. يكون في أعلى اليمين، أو في أعلى اليسار إذا كانت لغة Chrome عربية.</p>
+    </div>
+    <div class="pic">
+      <div class="screen"><div class="body row">
+        <b style="font-size:20px">Extensions</b><span class="spacer"></span>
+        <span class="muted" style="border:1px solid #dadce0;border-radius:999px;padding:4px 40px 4px 12px">🔍 Search extensions</span>
+        <span class="spacer"></span>
+        <span class="ring" style="padding:2px 6px">Developer mode <span class="toggle on"></span><span class="tag">1</span></span>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="step">
+    <div class="num">4</div>
+    <h2><span class="en">Click “Load unpacked”</span><span lang="ar">اضغط زر «Load unpacked»</span></h2>
+    <div>
+      <p class="en">Three new buttons appear under the title. Click the first one, <b>Load unpacked</b>.</p>
+      <p lang="ar">تظهر ثلاثة أزرار جديدة تحت العنوان. اضغط الزر الأول <b>Load unpacked</b> (تحميل إضافة غير مضغوطة).</p>
+    </div>
+    <div class="pic">
+      <div class="screen"><div class="body">
+        <div class="row" style="margin-bottom:14px"><b style="font-size:20px">Extensions</b><span class="spacer"></span><span>Developer mode <span class="toggle on"></span></span></div>
+        <div class="row">
+          <span class="btn ring">Load unpacked<span class="tag">1</span></span>
+          <span class="btn">Pack extension</span>
+          <span class="btn">Update</span>
+        </div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="step">
+    <div class="num">5</div>
+    <h2><span class="en">Choose the folder from step 1</span><span lang="ar">اختر المجلد من الخطوة 1</span></h2>
+    <div>
+      <p class="en">A window opens. Go to the folder you extracted in step 1 (for example <b>Documents</b>), click the <b>ls-sound-only</b> folder once, then click <b>Select Folder</b>.</p>
+      <p lang="ar">تفتح نافذة لاختيار مجلد. اذهب إلى المكان الذي استخرجت فيه الملفات في الخطوة 1 (مثل <b>Documents</b>)، واضغط مرة واحدة على مجلد <b>ls-sound-only</b>، ثم اضغط <b>Select Folder</b> (اختيار مجلد).</p>
+      <p class="note"><span class="en">The right folder is the one that has <code>manifest.json</code> and this guide inside it.</span><span lang="ar">المجلد الصحيح هو الذي بداخله الملف <code>manifest.json</code> وهذا الدليل.</span></p>
+    </div>
+    <div class="pic">
+      <div class="screen">
+        <div class="titlebar"><b>Select the extension directory</b></div>
+        <div class="row" style="align-items:stretch;gap:0">
+          <div class="side">Desktop<br>Downloads<br><b style="color:#202124">Documents</b><br>Pictures</div>
+          <div class="body list" style="flex:1">
+            <div><span class="folder"></span>My Projects</div>
+            <div class="sel ring"><span class="folder"></span>ls-sound-only<span class="tag">1</span></div>
+            <div><span class="folder"></span>Reports</div>
+          </div>
+        </div>
+        <div class="body row" style="border-top:1px solid #e3e6ee"><span class="muted">Folder: ls-sound-only</span><span class="spacer"></span>
+          <span class="btn primary ring">Select Folder<span class="tag">2</span></span><span class="btn">Cancel</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="step">
+    <div class="num">6</div>
+    <h2><span class="en">Check that it is installed</span><span lang="ar">تأكد من أن الإضافة ثُبّتت</span></h2>
+    <div>
+      <p class="en">An <b>LS Sound only</b> card with a blue speaker icon appears, with its switch on (blue). That is all.</p>
+      <p lang="ar">تظهر بطاقة <b>LS Sound only</b> عليها أيقونة سمّاعة زرقاء، ومفتاحها مُفعّل (أزرق). هذا كل شيء.</p>
+      <p class="note"><span class="en">If you see “Manifest file is missing or unreadable”, you chose the wrong folder: click Load unpacked again and choose the folder that has <code>manifest.json</code> inside.</span><span lang="ar">إذا ظهرت رسالة «Manifest file is missing or unreadable» فقد اخترت مجلدًا خاطئًا: اضغط Load unpacked مرة أخرى واختر المجلد الذي بداخله <code>manifest.json</code>.</span></p>
+    </div>
+    <div class="pic">
+      <div class="screen"><div class="body">
+        <div class="card ring"><span class="tag">✓</span>
+          <div class="row" style="align-items:flex-start"><img src="icons/icon48.png" alt=""><div><b>LS Sound only</b> <span class="muted">0.32.0</span><div class="muted">Faster, sound-first Label Studio for audio/video transcription…</div></div></div>
+          <div class="row" style="margin-top:12px"><span class="btn">Details</span><span class="btn">Remove</span><span class="spacer"></span><span class="muted" style="font-size:18px">↻</span><span class="toggle on"></span></div>
+        </div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="step">
+    <div class="num">7</div>
+    <h2><span class="en">Pin the icon (optional)</span><span lang="ar">ثبّت الأيقونة في الشريط (اختياري)</span></h2>
+    <div>
+      <p class="en">Click the puzzle-piece icon at the top right of Chrome, then click the pin next to <b>LS Sound only</b>. The blue speaker icon then stays in the toolbar, so you can open the settings with one click.</p>
+      <p lang="ar">اضغط أيقونة قطعة الأحجية في أعلى Chrome، ثم اضغط الدبوس بجانب <b>LS Sound only</b>. ستبقى أيقونة السمّاعة الزرقاء ظاهرة في الشريط، فتفتح الإعدادات بضغطة واحدة.</p>
+    </div>
+    <div class="pic">
+      <div class="screen"><div class="titlebar"><span class="dots"><span></span><span></span><span></span></span><div class="omni">annotation.dlnlp.ai</div>
+        <span class="ring" style="font-size:18px;padding:0 4px">🧩<span class="tag">1</span></span></div>
+        <div class="body" style="text-align:right"><div class="menu" style="text-align:left">
+          <div class="muted">Extensions</div>
+          <div class="row"><img src="icons/icon16.png" alt=""> LS Sound only <span class="spacer"></span><span class="ring" style="padding:0 4px">📌<span class="tag">2</span></span></div>
+        </div></div></div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="step">
+    <div class="num">8</div>
+    <h2><span class="en">Open a task in Label Studio</span><span lang="ar">افتح مهمة في Label Studio</span></h2>
+    <div>
+      <p class="en">Open any task (or reload the page if Label Studio is already open). When the task has loaded, the video, the wave and the segment list are in one window, and the task tiles are at the bottom:</p>
+      <p lang="ar">افتح أي مهمة (أو أعد تحميل الصفحة إن كان Label Studio مفتوحًا). عندما تُحمَّل المهمة يظهر الفيديو والموجة الصوتية وقائمة المقاطع في نافذة واحدة، وتظهر مربعات المهام في الأسفل:</p>
+    </div>
+    <div class="pic"><img class="shot" src="install/result.jpg" alt="Label Studio with LS Sound only: video, wave and segment list in one row, task tiles at the bottom"></div>
+  </section>
+
+  <section class="extra">
+    <h2><span class="en">A message about “developer mode extensions”</span><span lang="ar">رسالة عن «إضافات وضع المطوّر»</span></h2>
+    <p class="en">When Chrome starts, it may show a message about extensions in developer mode. This is normal for extensions installed this way. Close the message; do <b>not</b> choose to turn the extension off.</p>
+    <p lang="ar">عند تشغيل Chrome قد تظهر رسالة عن الإضافات في وضع المطوّر. هذا طبيعي للإضافات المثبتة بهذه الطريقة. أغلق الرسالة، و<b>لا</b> تختر تعطيل الإضافة.</p>
+  </section>
+
+  <section class="extra">
+    <h2><span class="en">Settings</span><span lang="ar">الإعدادات</span></h2>
+    <ul class="en">
+      <li>Click the blue speaker icon in the toolbar to open the settings.</li>
+      <li>After a change, save your work and reload the Label Studio page.</li>
+      <li>If a page looks wrong, choose the <b>Off</b> preset and tell the person who sent you this file.</li>
+    </ul>
+    <ul lang="ar">
+      <li>اضغط أيقونة السمّاعة الزرقاء في الشريط لفتح الإعدادات.</li>
+      <li>بعد أي تغيير، احفظ عملك ثم أعد تحميل صفحة Label Studio.</li>
+      <li>إذا ظهر خلل في الصفحة، اختر <b>Off</b> وأخبر الشخص الذي أرسل لك هذا الملف.</li>
+    </ul>
+  </section>
+
+  <section class="extra">
+    <h2><span class="en">Keyboard shortcuts</span><span lang="ar">اختصارات لوحة المفاتيح</span></h2>
+    <table>
+      <tr><td><span class="kbd">Space</span></td><td><span class="en">Play / pause</span><span lang="ar">تشغيل / إيقاف مؤقت</span></td></tr>
+      <tr><td><span class="kbd">9</span> / <span class="kbd">0</span></td><td><span class="en">Jump back / forward 1 second</span><span lang="ar">الرجوع / التقدّم ثانية واحدة</span></td></tr>
+      <tr><td><span class="kbd">Alt+9</span> / <span class="kbd">Alt+0</span></td><td><span class="en">The same while typing in the transcription box</span><span lang="ar">نفس الشيء أثناء الكتابة في مربع التفريغ</span></td></tr>
+      <tr><td><span class="kbd">Tab</span> / <span class="kbd">Shift+Tab</span></td><td><span class="en">Next / previous segment</span><span lang="ar">المقطع التالي / السابق</span></td></tr>
+      <tr><td><span class="kbd">Y</span> / <span class="kbd">N</span></td><td><span class="en">Code-switching: Yes / No (selected segment)</span><span lang="ar">التبديل اللغوي: نعم / لا (للمقطع المحدد)</span></td></tr>
+      <tr><td><span class="kbd">Ctrl</span></td><td><span class="en">Pressed alone: go to the transcription box</span><span lang="ar">عند ضغطه وحده: الانتقال إلى مربع التفريغ</span></td></tr>
+      <tr><td><span class="kbd">Enter</span></td><td><span class="en">Save the transcription text</span><span lang="ar">حفظ نص التفريغ</span></td></tr>
+      <tr><td><span class="kbd">→</span></td><td><span class="en">Submit / Update, or go to the next task</span><span lang="ar">إرسال / تحديث، أو الانتقال إلى المهمة التالية</span></td></tr>
+      <tr><td><span class="kbd">←</span></td><td><span class="en">Previous task</span><span lang="ar">المهمة السابقة</span></td></tr>
+      <tr><td><span class="kbd">Ctrl</span> + <span class="en">mouse wheel</span><span lang="ar">عجلة الفأرة</span></td><td><span class="en">Zoom the wave gently</span><span lang="ar">تكبير الموجة الصوتية بهدوء</span></td></tr>
+      <tr><td><span class="kbd">Alt+L</span></td><td><span class="en">Show / hide the task list</span><span lang="ar">إظهار / إخفاء قائمة المهام</span></td></tr>
+    </table>
+    <p class="muted" style="margin-top:8px"><span class="en">You can change the keys in the settings, under Keyboard.</span><span lang="ar">يمكنك تغيير المفاتيح من الإعدادات، في قسم Keyboard.</span></p>
+  </section>
+
+  <section class="extra">
+    <h2><span class="en">Updating to a new version</span><span lang="ar">التحديث إلى نسخة جديدة</span></h2>
+    <p class="en">When a new version is out, a blue <b>Update</b> button appears in the extension's bar in Label Studio, and the extension icon shows <b>NEW</b>. Then:</p>
+    <p lang="ar">عند صدور نسخة جديدة يظهر زر أزرق <b>Update</b> في شريط الإضافة داخل Label Studio، وتظهر كلمة <b>NEW</b> على أيقونة الإضافة. عندها:</p>
+    <ol class="en">
+      <li>Open your LS Sound only folder and double-click <b>update.cmd</b>. A black window downloads the new version and says “Updated to …”. Press any key to close it.</li>
+      <li>Click the blue speaker icon, then <b>Reload extension</b>.</li>
+      <li>Refresh the Label Studio page. Your settings are kept.</li>
+    </ol>
+    <ol lang="ar">
+      <li>افتح مجلد LS Sound only وانقر مرتين على <b>update.cmd</b>. تفتح نافذة سوداء تنزّل النسخة الجديدة وتكتب «Updated to …». اضغط أي مفتاح لإغلاقها.</li>
+      <li>اضغط أيقونة السمّاعة الزرقاء، ثم <b>Reload extension</b>.</li>
+      <li>أعد تحميل صفحة Label Studio. تبقى إعداداتك كما هي.</li>
+    </ol>
+    <p class="note"><span class="en">If Windows shows “Windows protected your PC”, click <b>More info</b>, then <b>Run anyway</b>. If update.cmd cannot update, download <code>ls-sound-only.zip</code> again from the releases page, extract it into the <b>same</b> folder (replace the files), then click the reload arrow ↻ on the extension in <code>chrome://extensions</code>.</span><span lang="ar">إذا ظهرت رسالة «Windows protected your PC» اضغط <b>More info</b> ثم <b>Run anyway</b>. إذا لم ينجح update.cmd، نزّل <code>ls-sound-only.zip</code> مرة أخرى من صفحة الإصدارات، واستخرجه في <b>نفس</b> المجلد (مع استبدال الملفات)، ثم اضغط سهم إعادة التحميل ↻ على الإضافة في <code>chrome://extensions</code>.</span></p>
+  </section>
+
+  <section class="extra">
+    <h2><span class="en">Good to know</span><span lang="ar">معلومات مفيدة</span></h2>
+    <ul class="en">
+      <li>Videos you open, and the next tasks (downloaded in the background), are kept on your computer so they open instantly: up to 6 files, about 0.5–0.8 GB.</li>
+      <li>Nothing is sent anywhere except to Label Studio itself.</li>
+      <li>To uninstall: click <b>Remove</b> on the card in <code>chrome://extensions</code>, then delete the folder.</li>
+    </ul>
+    <ul lang="ar">
+      <li>الفيديوهات التي تفتحها، والمهام التالية (التي تُنزَّل في الخلفية)، تُحفظ على جهازك لتفتح فورًا: حتى 6 ملفات، أي نحو 0.5 إلى 0.8 غيغابايت.</li>
+      <li>لا تُرسَل أي بيانات إلى أي مكان غير Label Studio نفسه.</li>
+      <li>لإزالة الإضافة: اضغط <b>Remove</b> على بطاقتها في <code>chrome://extensions</code>، ثم احذف المجلد.</li>
+    </ul>
+  </section>
+</main>
+<script>
+  const setLang = lang => {
+    document.body.dataset.lang = lang;
+    document.documentElement.lang = lang;
+    for (const b of document.querySelectorAll('[data-set]')) b.setAttribute('aria-pressed', String(b.dataset.set === lang));
+  };
+  for (const b of document.querySelectorAll('[data-set]')) b.addEventListener('click', () => setLang(b.dataset.set));
+  if (/^ar\b/i.test(navigator.language || '')) setLang('ar');
+</script>
+</body>
+</html>
