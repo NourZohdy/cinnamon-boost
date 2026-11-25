@@ -1,4 +1,4 @@
-// 0.26.5 review fixes. Run: node test_review.mjs
+// 0.26.5 review fixes. Run: node tests/test_review.mjs
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const { isMediaType, captureBlob, swapWhenPaused } = createRequire(import.meta.url)('../src/page/content.js');

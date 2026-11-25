@@ -1,4 +1,4 @@
-// Seek-echo filter. Run: node test_echo.mjs (written by Claude)
+// Seek-echo filter. Run: node tests/test_echo.mjs
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const { isEchoSeek, installSeekFilter, untie, retie, skipTinySeeks } = createRequire(import.meta.url)('../src/page/content.js');

@@ -1,5 +1,4 @@
-// Phase 1 tests for src/page/content.js sync helpers. Run: node test_sync.mjs
-// Written by Claude before implementation. Codex must not edit this file.
+// Phase 1 tests for src/page/content.js sync helpers. Run: node tests/test_sync.mjs
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 

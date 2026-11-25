@@ -1,4 +1,4 @@
-// Phase: cache + preload helpers. Run: node test_cache.mjs (written by Claude)
+// Phase: cache + preload helpers. Run: node tests/test_cache.mjs
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { fakeLS } from './test-support/fake-ls.mjs';

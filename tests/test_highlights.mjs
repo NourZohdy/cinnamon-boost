@@ -1,4 +1,4 @@
-// Backspace/Delete removes one wave highlight; the overview strip moves only when dragged. Run: node test_highlights.mjs (written by Claude)
+// Backspace/Delete removes one wave highlight; the overview strip moves only when dragged. Run: node tests/test_highlights.mjs
 import assert from 'node:assert/strict';
 import { fakeLS } from './test-support/fake-ls.mjs';
 

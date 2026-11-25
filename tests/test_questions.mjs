@@ -1,4 +1,4 @@
-// Compact layout, phase 2 helpers. Run: node test_questions.mjs (written by Claude)
+// Compact layout, phase 2 helpers. Run: node tests/test_questions.mjs
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const { cardOf, noteReason } = createRequire(import.meta.url)('../src/page/content.js');

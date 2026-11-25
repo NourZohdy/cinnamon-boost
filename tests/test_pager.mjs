@@ -1,4 +1,4 @@
-// Task pager helpers (bottom bar). Run: node test_pager.mjs (written by Claude; Codex must not edit)
+// Task pager helpers (bottom bar). Run: node tests/test_pager.mjs
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const { pagerWindow, pagerStat } = createRequire(import.meta.url)('../src/page/content.js');

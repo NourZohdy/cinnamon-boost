@@ -1,5 +1,4 @@
-// Phase 2 tests: reuse the waveform's downloaded file. Run: node test_local.mjs
-// Written by Claude before implementation. Codex must not edit this file.
+// Phase 2 tests: reuse the waveform's downloaded file. Run: node tests/test_local.mjs
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 

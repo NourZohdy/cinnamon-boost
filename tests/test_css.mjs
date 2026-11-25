@@ -1,4 +1,4 @@
-// A space after the colon of a pseudo-class ("input: checked {") silently disables the rule. Run: node test_css.mjs (written by Claude)
+// A space after the colon of a pseudo-class ("input: checked {") silently disables the rule. Run: node tests/test_css.mjs
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 

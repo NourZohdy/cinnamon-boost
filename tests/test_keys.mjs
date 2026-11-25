@@ -1,4 +1,4 @@
-﻿// Keyboard shortcuts. Run: node test_keys.mjs
+﻿// Keyboard shortcuts. Run: node tests/test_keys.mjs
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);

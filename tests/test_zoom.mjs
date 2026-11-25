@@ -1,4 +1,4 @@
-// Gentle zoom + overview helpers. Run: node test_zoom.mjs (written by Claude)
+// Gentle zoom + overview helpers. Run: node tests/test_zoom.mjs
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const { zoomFactor, zoomAt, peaks, pageAt } = createRequire(import.meta.url)('../src/page/content.js');

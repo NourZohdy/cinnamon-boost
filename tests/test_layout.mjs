@@ -1,4 +1,4 @@
-// Compact layout helpers. Run: node test_layout.mjs (written by Claude)
+// Compact layout helpers. Run: node tests/test_layout.mjs
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const { classifyHeader, flattenPath, isHotkey, readPref, writePref, fixedSlot } = createRequire(import.meta.url)('../src/page/content.js');
