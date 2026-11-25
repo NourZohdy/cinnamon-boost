@@ -32,7 +32,4 @@ jobs:
         run: |
           $tag = $env:GITHUB_REF_NAME
           $version = $env:CINNAMON_BOOST_VERSION
-          # ponytail: legacy asset for 0.32.0 updaters; drop once everyone is on 0.33+
-          $legacyZip = 'dist/ls-sound-only.zip'
-          Copy-Item -LiteralPath dist/cinnamon-boost.zip -Destination $legacyZip
-          gh release create "$tag" dist/cinnamon-boost.zip "$legacyZip" --title "Cinnamon Boost $version" --generate-notes --verify-tag
+          gh release create "$tag" dist/cinnamon-boost.zip --title "Cinnamon Boost $version" --generate-notes --verify-tag

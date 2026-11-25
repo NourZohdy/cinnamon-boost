@@ -105,7 +105,7 @@
     // --- speed (the project hides LS's own) and next-task status ---
     const SPEED_MIN = 0.5, SPEED_MAX = 3, SPEED_STEP = 0.25;
     let speed = 1;
-    try { speed = clampSpeed(+window.localStorage.getItem('soundOnly.speed') || 1); } catch (_) {}
+    try { speed = clampSpeed(+window.localStorage.getItem('cinnamonBoost.speed') || 1); } catch (_) {}
     const speedSeg = document.createElement('label');
     speedSeg.className = 'so-speed';
     speedSeg.title = 'Playback speed, same pitch. Slower: easier to hear where speech starts and ends. Double-click: back to 1×';
@@ -121,7 +121,7 @@
     // Synced with LS's own slider (gear menu): whichever was set last wins, and the choice
     // carries over to the next task. We only write the rate on a slider move or a new task.
     let speedFor = null, seenRate = null;
-    const saveSpeed = () => { try { window.localStorage.setItem('soundOnly.speed', String(speed)); } catch (_) {} };
+    const saveSpeed = () => { try { window.localStorage.setItem('cinnamonBoost.speed', String(speed)); } catch (_) {} };
     const showSpeed = rate => {
       if (document.activeElement !== slider && slider.value !== String(rate)) slider.value = String(rate);
       const text = `${+rate.toFixed(2)}×`;

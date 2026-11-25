@@ -65,18 +65,18 @@ const broken = { getItem() { throw new Error('blocked'); }, setItem() { throw ne
 
 test('prefs: allowed values round-trip, others fall back to the default', () => {
   const s = store();
-  assert.equal(readPref(s, 'soundOnly.layout', ['compact', 'original'], 'compact'), 'compact');
-  writePref(s, 'soundOnly.layout', 'original');
-  assert.equal(readPref(s, 'soundOnly.layout', ['compact', 'original'], 'compact'), 'original');
-  s.setItem('soundOnly.layout', 'weird');
-  assert.equal(readPref(s, 'soundOnly.layout', ['compact', 'original'], 'compact'), 'compact');
+  assert.equal(readPref(s, 'cinnamonBoost.layout', ['compact', 'original'], 'compact'), 'compact');
+  writePref(s, 'cinnamonBoost.layout', 'original');
+  assert.equal(readPref(s, 'cinnamonBoost.layout', ['compact', 'original'], 'compact'), 'original');
+  s.setItem('cinnamonBoost.layout', 'weird');
+  assert.equal(readPref(s, 'cinnamonBoost.layout', ['compact', 'original'], 'compact'), 'compact');
 });
 
 test('prefs: blocked storage never throws and keeps the choice for this page', () => {
-  assert.doesNotThrow(() => writePref(broken, 'soundOnly.tasks', 'hide'));
-  assert.equal(readPref(broken, 'soundOnly.tasks', ['show', 'hide'], 'show'), 'hide');   // in-memory fallback
-  assert.equal(readPref(broken, 'soundOnly.other', ['a', 'b'], 'a'), 'a');
-  assert.equal(readPref(null, 'soundOnly.x', ['a', 'b'], 'b'), 'b');
+  assert.doesNotThrow(() => writePref(broken, 'cinnamonBoost.tasks', 'hide'));
+  assert.equal(readPref(broken, 'cinnamonBoost.tasks', ['show', 'hide'], 'show'), 'hide');   // in-memory fallback
+  assert.equal(readPref(broken, 'cinnamonBoost.other', ['a', 'b'], 'a'), 'a');
+  assert.equal(readPref(null, 'cinnamonBoost.x', ['a', 'b'], 'b'), 'b');
 });
 
 test('fixedSlot puts the bottom bar inside the top bar, right-aligned', () => {

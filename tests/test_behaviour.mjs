@@ -1,6 +1,8 @@
 ﻿import assert from 'node:assert/strict';
+import settingsApi from '../src/shared/settings.js';
 import { fakeLS, makePlayer, mediaUrl } from './test-support/fake-ls.mjs';
 
+const { PRESETS } = settingsApi;
 let count = 0;
 async function test(name, fn) { await fn(); count++; console.log('ok -', name); }
 const key = (f, code, options = {}) => {
@@ -378,24 +380,24 @@ await test('task and player replacement leaves new player safe and refreshes UI'
 });
 
 await test('early XHR cache hydration and native fallback across modes', async () => {
-  for (const mode of ['off', 'sound', 'full']) {
+  for (const settings of Object.values(PRESETS)) {
     let xhr;
-    const f = fakeLS({ mode, holdCache: true, allowedNativeUrls: [mediaUrl], onEarly(w) {
+    const f = fakeLS({ settings, holdCache: true, allowedNativeUrls: [mediaUrl], onEarly(w) {
       assert.equal(w.document.body, null);
       assert.equal(w.Htx, undefined);
       xhr = new w.XMLHttpRequest(); xhr.open('GET', mediaUrl); xhr.responseType = 'arraybuffer'; xhr.send();
     } });
     const keyUrl = new f.w.URL(mediaUrl, f.w.location.href).href;
-    const cacheUrl = `${f.w.location.origin}/__sound-only-cache__/?k=${encodeURIComponent(keyUrl)}`;
+    const cacheUrl = `${f.w.location.origin}/__cinnamon-boost-cache__/?k=${encodeURIComponent(keyUrl)}`;
     f.cache.set(cacheUrl, new f.w.Response(new f.w.Blob(['cached'], { type: 'video/mp4' }), { headers: { 'Content-Type': 'video/mp4' } }));
-    if (mode === 'off') { assert.deepEqual(xhr.sent, [mediaUrl]); }
+    if (!settings.cache) { assert.deepEqual(xhr.sent, [mediaUrl]); }
     else assert.deepEqual(xhr.sent, []);
     f.releaseCache(); await f.flush();
-    if (mode !== 'off') { assert.match(xhr.sent[0], /^blob:fake-/); }
+    if (settings.cache) { assert.match(xhr.sent[0], /^blob:fake-/); }
     f.allowedNative.add('/data/local-files/?d=other.mp4');
     const fallback = new f.w.XMLHttpRequest(); fallback.open('GET', '/data/local-files/?d=other.mp4'); fallback.responseType = 'arraybuffer'; fallback.send();
     assert.deepEqual(fallback.sent, ['/data/local-files/?d=other.mp4']);
-    if (mode !== 'off') {
+    if (settings.cache) {
       const bytes = new f.w.Uint8Array([11, 22, 33]);
       fallback.addEventListener('load', () => { const response = fallback.response; structuredClone(response, { transfer: [response] }); });
       fallback.complete(bytes.buffer);
@@ -405,10 +407,10 @@ await test('early XHR cache hydration and native fallback across modes', async (
     }
     healthy(f);
   }
-  for (const mode of ['sound', 'full']) {
+  for (const settings of [PRESETS.loading, PRESETS.full]) {
     const initialRoutes = [1, 2, 3, 4].map(id => [`/api/tasks/${id}`, () => ({ ok: false })]);
     initialRoutes.push(['/api/current-user/whoami', () => ({ ok: true, json: async () => ({ id: 1 }) })]);
-    const f = fakeLS({ mode, url: 'https://annotation.dlnlp.ai/projects/7/data', allowedNativeUrls: [mediaUrl], initialRoutes });
+    const f = fakeLS({ settings, url: 'https://annotation.dlnlp.ai/projects/7/data', allowedNativeUrls: [mediaUrl], initialRoutes });
     await f.flush();
     let finishDownload;
     const download = new Promise(resolve => { finishDownload = resolve; });

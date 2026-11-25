@@ -16,14 +16,14 @@ const latest = `${current}.1`;
 const releases = 'https://github.com/NourZohdy/cinnamon-boost/releases/';
 const tagged = releases + 'tag/v' + latest;
 const fallback = releases + 'latest';
-const legacyRelease = 'https://github.com/NourZohdy/ls-sound-only/releases/tag/v' + latest;
+const foreignRelease = 'https://example.org/releases/tag/v' + latest;
 const hostile = 'https://github.com.evil.invalid/NourZohdy/cinnamon-boost/releases/latest';
 const available = { latest, newer: true, url: tagged };
 const hour = 60 * 60 * 1000;
 
 assert.equal(manifest.name, 'Cinnamon Boost');
 assert.equal(manifest.homepage_url, 'https://github.com/NourZohdy/cinnamon-boost');
-assert.equal(UPDATE_KEY, 'soundOnly.update');
+assert.equal(UPDATE_KEY, 'cinnamonBoost.update');
 assert.equal(manifest.author, 'Nour Tammous');
 assert.equal(manifest.action.default_title, 'Cinnamon Boost: settings');
 assert.equal(isNewer('0.32.0', '0.31.1'), true);
@@ -38,7 +38,7 @@ for (const invalid of ['garbage', '1.2.3-rc', '1..2', '1.2.3.4.5', 999, null]) {
   assert.equal(isNewer(latest, invalid), false);
 }
 assert.equal(releaseUrl(tagged), tagged);
-for (const invalid of [hostile, 'javascript:alert(1)', releases + '%2e%2e/issues', releases.replace('https:', 'http:'), null]) {
+for (const invalid of [hostile, foreignRelease, 'javascript:alert(1)', releases + '%2e%2e/issues', releases.replace('https:', 'http:'), null]) {
   assert.equal(releaseUrl(invalid), fallback);
 }
 
@@ -205,7 +205,7 @@ popup.chrome = {
     },
   },
   storage: {
-    local: { get: async () => ({ [UPDATE_KEY]: available, 'soundOnly.settings': {} }) },
+    local: { get: async () => ({ [UPDATE_KEY]: available, 'cinnamonBoost.settings': {} }) },
     onChanged: { addListener: fn => onChanged = fn },
   },
 };
@@ -259,7 +259,7 @@ for (const [record, status, hidden] of [
   assert.equal(byId('update-banner').hidden, hidden);
 }
 assert.equal(byId('release-link').href, fallback);
-onChanged({ [UPDATE_KEY]: { newValue: { ...available, url: legacyRelease } } }, 'local');
+onChanged({ [UPDATE_KEY]: { newValue: { ...available, url: foreignRelease } } }, 'local');
 assert.equal(byId('update-banner').hidden, false);
 assert.equal(byId('release-link').href, fallback);
 onChanged({ [UPDATE_KEY]: { newValue: { ...available, latest: current } } }, 'local');

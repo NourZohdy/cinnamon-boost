@@ -81,13 +81,11 @@ const PAGER_CACHE_ICONS = {
   error: svg('<circle cx="8" cy="8" r="5.5"/><path d="m6 6 4 4m0-4-4 4"/>'),
 };
 
-// ponytail: keep the cache name and request path so previously cached media remains available.
-// ponytail: old cache name kept so cached videos survive the rename
-const CACHE_NAME = 'sound-only-v1';
+const CACHE_NAME = 'cinnamon-boost-v1';
 const CACHE_MAX_FILES = 6;  // ponytail: count limit, not bytes; ~6 x 80 MB here. Switch to a byte budget if files get big.
 
 function cacheRequestUrl(key, origin) {
-  return `${origin}/__sound-only-cache__/?k=${encodeURIComponent(key)}`;
+  return `${origin}/__cinnamon-boost-cache__/?k=${encodeURIComponent(key)}`;
 }
 
 // Cache keys come back oldest first; drop the oldest beyond max.

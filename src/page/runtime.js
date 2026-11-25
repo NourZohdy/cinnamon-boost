@@ -18,10 +18,9 @@
   };
   ns.createContext = () => {
     let storage = null; try { storage = window.localStorage; } catch (_) {}
-    let raw = null, legacy;
-    try { raw = JSON.parse(storage?.getItem('soundOnly.settings') || 'null'); } catch (_) {}
-    try { legacy = storage?.getItem('soundOnly.mode'); } catch (_) {}
-    const settings = ns.settings.migrateSettings(raw, legacy);
+    let raw = null;
+    try { raw = JSON.parse(storage?.getItem('cinnamonBoost.settings') || 'null'); } catch (_) {}
+    const settings = ns.settings.normalizeSettings(raw);
     const mode = Object.entries(settings).every(([k,v]) => k === 'preload' || k === 'keys' || !v) ? 'off' : (settings.compact ? 'full' : 'sound');
     const editing = () => {
       const ann = window.Htx?.annotationStore?.selected;

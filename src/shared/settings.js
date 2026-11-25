@@ -42,16 +42,6 @@
     }
     return result;
   }
-  function migrateSettings(raw, legacyMode) {
-    if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
-      const wasOff = !Object.hasOwn(raw, 'nextAfterSubmit') && raw.preload === 0 &&
-        keys.every(key => key === 'nextAfterSubmit' || raw[key] === false);
-      return normalizeSettings(wasOff ? { ...raw, nextAfterSubmit: false } : raw);
-    }
-    if (legacyMode === 'off') return normalizeSettings(PRESETS.off);
-    if (legacyMode === 'sound') return { ...DEFAULTS, compact: false, pager: false };
-    return { ...DEFAULTS };
-  }
   function applyPreset(settings, id) {
     return normalizeSettings({ ...PRESETS[id], keys: settings.keys });
   }
@@ -59,7 +49,7 @@
     const normalized = normalizeSettings(settings);
     return Object.keys(PRESETS).find(id => Object.entries(PRESETS[id]).every(([key, value]) => normalized[key] === value)) || 'custom';
   }
-  const api = { DEFAULTS, PRESETS, normalizeSettings, migrateSettings, matchPreset, applyPreset, keyGroup, validBinding, bindingLabel, eventBinding };
+  const api = { DEFAULTS, PRESETS, normalizeSettings, matchPreset, applyPreset, keyGroup, validBinding, bindingLabel, eventBinding };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else { window.CinnamonBoost = window.CinnamonBoost || {}; window.CinnamonBoost.settings = api; }
 })();

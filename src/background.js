@@ -1,8 +1,6 @@
 ﻿// Service worker and isolated page bridge.
 const DEV = true;
-// ponytail: storage keys keep the old soundOnly. prefix so existing settings and caches survive the rename
-const SETTINGS_KEY = 'soundOnly.settings';
-const MODE_KEY = 'soundOnly.mode';
+const SETTINGS_KEY = 'cinnamonBoost.settings';
 if (typeof window === 'undefined') {
   globalThis.importScripts('/src/shared/update.js');
   const REPO = 'NourZohdy/cinnamon-boost';
@@ -53,14 +51,14 @@ if (typeof window === 'undefined') {
   });
   if (DEV) chrome.runtime.onMessage.addListener(msg => { if (msg === 'so-dev-reload') chrome.runtime.reload(); });
 } else {
-  const UPDATE_KEY = 'soundOnly.update';
+  const UPDATE_KEY = 'cinnamonBoost.update';
   if (DEV) window.addEventListener('message', e => { if (e.source === window && e.data === 'so-dev-reload') chrome.runtime.sendMessage('so-dev-reload'); });
   const started = performance.now();
   let interacted = false;
   for (const event of ['keydown', 'pointerdown']) window.addEventListener(event, () => { interacted = true; }, { capture: true, once: true });
   const mirror = (key, value) => {
     if (value === undefined) return false;
-    const serialized = key === MODE_KEY ? value : JSON.stringify(value);
+    const serialized = JSON.stringify(value);
     try { const before = localStorage.getItem(key); localStorage.setItem(key, serialized); return before !== serialized; } catch (_) { return false; }
   };
   const mirrorUpdate = value => {
@@ -68,16 +66,14 @@ if (typeof window === 'undefined') {
     else { try { localStorage.removeItem(UPDATE_KEY); } catch (_) {} }
   };
   let updateChanged = false;
-  chrome.storage.local.get([SETTINGS_KEY, MODE_KEY, UPDATE_KEY]).then(data => {
+  chrome.storage.local.get([SETTINGS_KEY, UPDATE_KEY]).then(data => {
     if (!updateChanged) mirrorUpdate(data[UPDATE_KEY]);
     const settingsChanged = mirror(SETTINGS_KEY, data[SETTINGS_KEY]);
-    const modeChanged = mirror(MODE_KEY, data[MODE_KEY]);
-    const changed = settingsChanged || modeChanged;
-    if (changed && !interacted && performance.now() - started <= 3000) window.location.reload();
+    if (settingsChanged && !interacted && performance.now() - started <= 3000) window.location.reload();
   }).catch(() => {});
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== 'local') return;
-    for (const key of [SETTINGS_KEY, MODE_KEY]) if (changes[key]) mirror(key, changes[key].newValue);
+    if (changes[SETTINGS_KEY]) mirror(SETTINGS_KEY, changes[SETTINGS_KEY].newValue);
     if (changes[UPDATE_KEY]) {
       updateChanged = true;
       mirrorUpdate(changes[UPDATE_KEY].newValue);

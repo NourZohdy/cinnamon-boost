@@ -22,8 +22,7 @@
     return releases + 'latest';
   }
 
-  // ponytail: keep the soundOnly. key so existing cached update checks survive the rename.
-  const api = { UPDATE_KEY: 'soundOnly.update', isNewer, releaseUrl };
+  const api = { UPDATE_KEY: 'cinnamonBoost.update', isNewer, releaseUrl };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else {
     globalThis.CinnamonBoost = globalThis.CinnamonBoost || {};

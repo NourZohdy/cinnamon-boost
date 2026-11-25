@@ -1,6 +1,6 @@
-﻿const { DEFAULTS, normalizeSettings, migrateSettings, matchPreset, applyPreset, keyGroup, validBinding, bindingLabel, eventBinding } = window.CinnamonBoost.settings;
+﻿const { DEFAULTS, normalizeSettings, matchPreset, applyPreset, keyGroup, validBinding, bindingLabel, eventBinding } = window.CinnamonBoost.settings;
 const { UPDATE_KEY, isNewer, releaseUrl } = window.CinnamonBoost.update;
-const KEY = 'soundOnly.settings';
+const KEY = 'cinnamonBoost.settings';
 const modes = [
   ['full', 'Full', 'Everything on: compact layout, task tiles, wave tools, shortcuts and fast loading.', 'Recommended'],
   ['loading', 'Loading fix only', 'Label Studio looks the same; videos just load faster and play smoothly.'],
@@ -234,8 +234,8 @@ function save(next) {
 
 async function load() {
   try {
-    const data = await chrome.storage.local.get([KEY, 'soundOnly.mode']);
-    settings = migrateSettings(data[KEY], data['soundOnly.mode']);
+    const data = await chrome.storage.local.get(KEY);
+    settings = normalizeSettings(data[KEY]);
     if (!Object.hasOwn(data, KEY)) await chrome.storage.local.set({ [KEY]: settings });
     loaded = true;
     render();

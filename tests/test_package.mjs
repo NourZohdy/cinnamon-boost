@@ -51,7 +51,10 @@ const updater = read('update.cmd');
 assert.ok(updater.endsWith('\r\n') && !/[\r\n]/.test(updater.replaceAll('\r\n', '')));
 assert.ok(updater.includes(`https://github.com/NourZohdy/cinnamon-boost/releases/latest/download/${zipName}`));
 const workflow = read('.github/workflows/release.yml');
-assert.match(workflow, /\$legacyZip = 'dist\/ls-sound-only\.zip'\s+Copy-Item -LiteralPath dist\/cinnamon-boost\.zip -Destination \$legacyZip\s+gh release create "\$tag" dist\/cinnamon-boost\.zip "\$legacyZip"/);
+const releaseCommand = workflow.split(/\r?\n/).map(line => line.trim()).filter(line => line.startsWith('gh release create '));
+assert.deepEqual(releaseCommand, [
+  `gh release create "$tag" dist/${zipName} --title "Cinnamon Boost $version" --generate-notes --verify-tag`,
+]);
 assert.ok(files.every(file => !/(^|\/)(?:test_[^/]*\.mjs|node_modules|\.feature|compressed-videos)(?:\/|$)|\.md$/i.test(file)));
 assert.throws(() => buildFileList(directory, { ...manifest, icons: { 16: 'icons/missing.png' } }), /Missing package file: icons\/missing\.png/);
 

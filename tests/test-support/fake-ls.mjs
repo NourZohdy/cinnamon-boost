@@ -5,7 +5,7 @@ const manifest = JSON.parse(readFileSync(new URL('../../manifest.json', import.m
 const sources = manifest.content_scripts.filter(script => script.world === 'MAIN').flatMap(script => script.js).map(path => readFileSync(new URL('../../' + path, import.meta.url), 'utf8'));
 export const mediaUrl = '/data/local-files/?d=sample.mp4';
 
-export function fakeLS({ settings, mode = 'full', layout = 'compact', cacheEntries = [], holdCache = false, mountedAtReady = false, onEarly = () => {}, allowedNativeUrls = [], initialRoutes = [], url = 'https://annotation.dlnlp.ai/label' } = {}) {
+export function fakeLS({ settings, layout = 'compact', cacheEntries = [], holdCache = false, mountedAtReady = false, onEarly = () => {}, allowedNativeUrls = [], initialRoutes = [], url = 'https://annotation.dlnlp.ai/label' } = {}) {
   const errors = [], network = [], objects = new Map(), cache = new Map(cacheEntries);
   let releaseCache;
   const allowedNative = new Set(allowedNativeUrls);
@@ -17,9 +17,8 @@ export function fakeLS({ settings, mode = 'full', layout = 'compact', cacheEntri
   });
   const w = dom.window, d = w.document;
   d.body.remove();
-  w.localStorage.setItem('soundOnly.mode', mode);
-  if (settings !== undefined) w.localStorage.setItem('soundOnly.settings', JSON.stringify(settings));
-  w.localStorage.setItem('soundOnly.layout', layout);
+  if (settings !== undefined) w.localStorage.setItem('cinnamonBoost.settings', JSON.stringify(settings));
+  w.localStorage.setItem('cinnamonBoost.layout', layout);
   let now = 0, nextTimer = 1;
   const timers = new Map();
   const schedule = (fn, ms, interval = 0) => { const id = nextTimer++; timers.set(id, { fn, at: now + ms, interval }); return id; };
@@ -50,7 +49,8 @@ export function fakeLS({ settings, mode = 'full', layout = 'compact', cacheEntri
     async put(req, response) { cache.set(typeof req === 'string' ? req : req.url, response); },
     async delete(req) { return cache.delete(typeof req === 'string' ? req : req.url); },
   };
-  w.caches = { async open() { return disk; } };
+  const cacheNames = new Set();
+  w.caches = { async open(name) { cacheNames.add(name); return disk; } };
   const routes = new Map(initialRoutes);
   w.fetch = (url, options) => { const key = url instanceof Request ? url.url : String(url); const route = routes.get(key); if (route) return Promise.resolve(route(url, options)); const message = `Unexpected fetch: ${url}`; network.push(message); return Promise.reject(new Error(message)); };
   class FakeXHR extends w.EventTarget {
@@ -101,9 +101,9 @@ export function fakeLS({ settings, mode = 'full', layout = 'compact', cacheEntri
     }
     now = end;
   }
-  if (mode !== 'off' && !mountedAtReady) advance(500);
+  if (!mountedAtReady) advance(500);
   const flush = async () => { for (let i = 0; i < 100; i++) await Promise.resolve(); };
-  return { w, d, dom, calls, regions, ann, audio, video, sm, ws, choices, advance, flush, releaseCache, cache, disk, objects, network, errors, canvasCalls, allowedNative, routes };
+  return { w, d, dom, calls, regions, ann, audio, video, sm, ws, choices, advance, flush, releaseCache, cache, cacheNames, disk, objects, network, errors, canvasCalls, allowedNative, routes };
 }
 
 export function makePlayer(calls, container) {

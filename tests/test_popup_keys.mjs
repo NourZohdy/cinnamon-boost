@@ -5,19 +5,27 @@ import { JSDOM } from 'jsdom';
 
 const read = file => readFileSync(new URL('../' + file, import.meta.url), 'utf8');
 const { window: w } = new JSDOM(read('src/popup/popup.html'), { runScripts: 'outside-only' });
-const storageKey = 'soundOnly.settings';
+const storageKey = 'cinnamonBoost.settings';
+const reads = [];
 const writes = [];
 w.chrome = {
   runtime: { getManifest: () => JSON.parse(read('manifest.json')) },
   storage: { onChanged: { addListener() {} }, local: {
-    async get() { return { [storageKey]: {} }; },
-    async set(value) { writes.push(value[storageKey]); },
+    async get(key) {
+      reads.push(key);
+      return key === storageKey ? { [storageKey]: {} } : {};
+    },
+    async set(value) {
+      assert.deepEqual(Object.keys(value), [storageKey]);
+      writes.push(value[storageKey]);
+    },
   } },
 };
 w.eval(read('src/shared/settings.js'));
 w.eval(read('src/shared/update.js'));
 w.eval(read('src/popup/popup.js'));
 await setImmediate();
+assert.deepEqual(reads.sort(), [storageKey, 'cinnamonBoost.update']);
 
 const modes = w.document.querySelector('#presets[role="radiogroup"][aria-label="Mode"]');
 assert.ok(modes);

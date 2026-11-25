@@ -8,16 +8,16 @@
     // --- compact layout ---
     let storage; try { storage = window.localStorage; } catch (_) { storage = null; }
     const layoutOn = MODE === 'full';        // 'sound' mode: LS's own layout, no layout buttons, no Alt+L
-    let layout = layoutOn ? readPref(storage, 'soundOnly.layout', ['compact', 'original'], 'compact') : 'original';
-    let tasks = layoutOn ? readPref(storage, 'soundOnly.tasks', ['show', 'hide'], 'show') : 'show';
+    let layout = layoutOn ? readPref(storage, 'cinnamonBoost.layout', ['compact', 'original'], 'compact') : 'original';
+    let tasks = layoutOn ? readPref(storage, 'cinnamonBoost.tasks', ['show', 'hide'], 'show') : 'show';
     let structureWarned = false;
     const lbar = document.createElement('div'); lbar.className = 'so-lbar';
     for (const event of ['pointerdown', 'mousedown', 'mouseup', 'click']) lbar.addEventListener(event, e => e.stopPropagation());
     lbar.addEventListener('mousedown', e => e.preventDefault());
     const toggle = (name, icon, action) => { const b = document.createElement('button'); b.type='button'; b.className='so-btn'; b.title=name; b.setAttribute('aria-label',name); b.innerHTML=svg(icon); b.addEventListener('click',action); lbar.appendChild(b); return b; };
-    const changeTasks = () => { tasks=tasks==='show'?'hide':'show'; writePref(storage,'soundOnly.tasks',tasks); syncLayout(); };
+    const changeTasks = () => { tasks=tasks==='show'?'hide':'show'; writePref(storage,'cinnamonBoost.tasks',tasks); syncLayout(); };
     const tasksBtn = toggle('Task list','<rect x="2" y="3" width="12" height="10" rx="1"/><path d="M6 3v10"/>',changeTasks);
-    const layoutBtn = toggle('Layout','<rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/>',() => { layout=layout==='compact'?'original':'compact'; writePref(storage,'soundOnly.layout',layout); syncLayout(); place(); });
+    const layoutBtn = toggle('Layout','<rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/>',() => { layout=layout==='compact'?'original':'compact'; writePref(storage,'cinnamonBoost.layout',layout); syncLayout(); place(); });
     const setAttr = (el, name, value) => { if (el.getAttribute(name) !== value) el.setAttribute(name,value); };
     function appendShortcutHint(host, key, title) {
       if (!host || !key || host.querySelector('.so-hint')) return;

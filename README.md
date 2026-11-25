@@ -18,7 +18,10 @@ The same guide is included in the ZIP at `docs/install.html`.
 
 ### Install (once, about 2 minutes)
 
-1. Download **`cinnamon-boost.zip`** from the [latest release](https://github.com/NourZohdy/cinnamon-boost/releases/latest).
+1. Open the [latest release](https://github.com/NourZohdy/cinnamon-boost/releases/latest) and click **`cinnamon-boost.zip`** under *Assets* to download it.
+
+   ![On the release page, click cinnamon-boost.zip under Assets](docs/images/download.jpg)
+
 2. Unzip it into a folder you will keep (for example `Documents\cinnamon-boost`).
 3. Open **`docs/install.html`** in that folder and follow the illustrated steps (English and Arabic).
 

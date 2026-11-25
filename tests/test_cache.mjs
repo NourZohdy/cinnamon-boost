@@ -12,6 +12,7 @@ test('cache URL is same-origin and round-trips the key', () => {
   const key = mediaKey('/cinnamon/data/local-files/?d=videos%2Fa%20b.mp4&lsref=x', O + '/cinnamon/projects/19/data');
   const u = new URL(cacheRequestUrl(key, O));
   assert.equal(u.origin, O);
+  assert.equal(u.pathname, '/__cinnamon-boost-cache__/');
   assert.equal(u.searchParams.get('k'), key);
 });
 
@@ -195,6 +196,7 @@ test('a stale cache error cannot replace the newly selected task source', () => 
   });
   const { w } = f;
   await w.CinnamonBoost.ctx.cache.ready;
+  assert.deepEqual([...f.cacheNames], ['cinnamon-boost-v1']);
   const options = { headers: { Range: 'bytes=0-0' } };
   const probe = await w.fetch(serverSrc, options);
   assert.equal(probe.status, 206);
