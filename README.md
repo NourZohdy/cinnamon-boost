@@ -4,9 +4,7 @@
 
 A Chrome extension that makes [Label Studio](https://labelstud.io/) faster and easier for **audio and video transcription**. It puts the video, the waveform and a segment list in one window, keeps files on your computer so tasks open instantly, and adds keyboard shortcuts for the whole workflow.
 
-**Illustrated install guide (English / العربية): https://nourzohdy.github.io/cinnamon-boost/docs/install.html**
-
-The same guide is included in the ZIP at `docs/install.html`.
+**New here? Go to [Install](#install-once-about-2-minutes).**
 
 ![Label Studio with Cinnamon Boost: video, wave and segment list in one row, task tiles at the bottom](docs/images/screenshot.jpg)
 
@@ -22,10 +20,11 @@ The same guide is included in the ZIP at `docs/install.html`.
 
    ![On the release page, click cinnamon-boost.zip under Assets](docs/images/download.jpg)
 
-2. Unzip it into a folder you will keep (for example `Documents\cinnamon-boost`).
-3. Open **`docs/install.html`** in that folder and follow the illustrated steps (English and Arabic).
+2. Follow the **illustrated install guide** (English / العربية). It takes you from unzipping to the finished setup. Open it either way:
+   - **Online:** [nourzohdy.github.io/cinnamon-boost/docs/install.html](https://nourzohdy.github.io/cinnamon-boost/docs/install.html)
+   - **Offline:** unzip the file, then open **`docs/install.html`** inside the folder.
 
-In short: `chrome://extensions` → turn on **Developer mode** → **Load unpacked** → choose the folder.
+Already know Chrome extensions? Unzip into a folder you will keep, then `chrome://extensions` → turn on **Developer mode** → **Load unpacked** → choose the folder.
 
 ### Update to a new version
 
