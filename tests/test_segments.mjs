@@ -1,7 +1,7 @@
 // Compact layout, phase 3 helpers (segments panel). Run: node test_segments.mjs (written by Claude)
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-const { shortTime, stepIndex, segmentState } = createRequire(import.meta.url)('../content.js');
+const { shortTime, stepIndex, segmentState } = createRequire(import.meta.url)('../src/page/content.js');
 
 let n = 0;
 const test = (name, fn) => { fn(); n++; console.log('ok -', name); };

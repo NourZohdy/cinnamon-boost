@@ -1,10 +1,10 @@
-// Phase 1 tests for content.js sync helpers. Run: node test_sync.mjs
+// Phase 1 tests for src/page/content.js sync helpers. Run: node test_sync.mjs
 // Written by Claude before implementation. Codex must not edit this file.
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { untie, retie, checkShape } = require('../content.js');
+const { untie, retie, checkShape } = require('../src/page/content.js');
 
 // Fake of Label Studio's shared syncManager (see .feature/sound-only/facts.md).
 class FakeSM {

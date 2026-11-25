@@ -84,7 +84,7 @@ export function fakeLS({ settings, mode = 'full', layout = 'compact', cacheEntri
   d.querySelector('[aria-label="Play"]').addEventListener('click', () => { calls.playback++; });
   d.querySelector('[data-testid="textarea-add-button"]').addEventListener('click', () => { calls.add++; });
   // Label Studio mounts its players after DOM ready; attaching a complete compact editor
-  // before startup exposes a pre-existing temporal-dead-zone error in content.js.
+  // before startup exposes a pre-existing temporal-dead-zone error in src/page/content.js.
   const videoNode = d.querySelector('.lsf-video-segmentation');
   const videoParent = videoNode.parentElement; if (!mountedAtReady) videoNode.remove();
   d.dispatchEvent(new w.Event('DOMContentLoaded', { bubbles: true }));

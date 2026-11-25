@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-const { pagerAnnotation } = createRequire(import.meta.url)('../content.js');
+const { pagerAnnotation } = createRequire(import.meta.url)('../src/page/content.js');
 
 const result = [
   { id: 'a', from_name: 'speaker_segments' },

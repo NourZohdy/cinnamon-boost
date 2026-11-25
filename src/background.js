@@ -3,7 +3,7 @@ const DEV = true;
 const SETTINGS_KEY = 'soundOnly.settings';
 const MODE_KEY = 'soundOnly.mode';
 if (typeof window === 'undefined') {
-  globalThis.importScripts('update.js');
+  globalThis.importScripts('/src/shared/update.js');
   const REPO = 'NourZohdy/ls-sound-only';
   const { UPDATE_KEY, isNewer, releaseUrl } = globalThis.LSSoundOnly.update;
   const current = chrome.runtime.getManifest().version;

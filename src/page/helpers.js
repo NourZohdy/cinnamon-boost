@@ -1,7 +1,7 @@
 /* global require */
 (() => {
 const { DEFAULTS, eventBinding } = typeof module !== 'undefined' && module.exports
-  ? require('./settings.js') : window.LSSoundOnly.settings;
+  ? require('../shared/settings.js') : window.LSSoundOnly.settings;
 function segmentShortcut(e, typing, keys = DEFAULTS.keys, inTranscription = false) {
   if (typing && !inTranscription) return null;
   const binding = eventBinding(e, typing);

@@ -4,7 +4,7 @@ import { setImmediate } from 'node:timers/promises';
 import { JSDOM } from 'jsdom';
 
 const read = file => readFileSync(new URL('../' + file, import.meta.url), 'utf8');
-const { window: w } = new JSDOM(read('popup.html'), { runScripts: 'outside-only' });
+const { window: w } = new JSDOM(read('src/popup/popup.html'), { runScripts: 'outside-only' });
 const storageKey = 'soundOnly.settings';
 const writes = [];
 w.chrome = {
@@ -14,9 +14,9 @@ w.chrome = {
     async set(value) { writes.push(value[storageKey]); },
   } },
 };
-w.eval(read('settings.js'));
-w.eval(read('update.js'));
-w.eval(read('popup.js'));
+w.eval(read('src/shared/settings.js'));
+w.eval(read('src/shared/update.js'));
+w.eval(read('src/popup/popup.js'));
 await setImmediate();
 
 const sections = () => [...w.document.querySelectorAll('#sections > details')];

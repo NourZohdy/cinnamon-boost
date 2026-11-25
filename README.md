@@ -2,7 +2,11 @@
 
 A Chrome extension that makes [Label Studio](https://labelstud.io/) faster and easier for **audio and video transcription**. It puts the video, the waveform and a segment list in one window, keeps files on your computer so tasks open instantly, and adds keyboard shortcuts for the whole workflow.
 
-![Label Studio with LS Sound only: video, wave and segment list in one row, task tiles at the bottom](install/result.jpg)
+**Illustrated install guide (English / العربية): https://nourzohdy.github.io/ls-sound-only/docs/install.html**
+
+The same guide is included in the ZIP at `docs/install.html`.
+
+![Label Studio with LS Sound only: video, wave and segment list in one row, task tiles at the bottom](docs/images/screenshot.jpg)
 
 > Built for the team's Label Studio server (`annotation.dlnlp.ai`, Label Studio 1.23). See [Using it on another server](#using-it-on-another-server).
 
@@ -14,7 +18,7 @@ A Chrome extension that makes [Label Studio](https://labelstud.io/) faster and e
 
 1. Download **`ls-sound-only.zip`** from the [latest release](https://github.com/NourZohdy/ls-sound-only/releases/latest).
 2. Unzip it into a folder you will keep (for example `Documents\ls-sound-only`).
-3. Open **`INSTALL.html`** in that folder and follow the illustrated steps (English and Arabic).
+3. Open **`docs/install.html`** in that folder and follow the illustrated steps (English and Arabic).
 
 In short: `chrome://extensions` → turn on **Developer mode** → **Load unpacked** → choose the folder.
 
@@ -82,14 +86,19 @@ For development, load the repository folder itself with **Load unpacked**. In a 
 | Path | What it is |
 |---|---|
 | `manifest.json` | Extension manifest; its `version` is the release version |
-| `settings.js`, `helpers.js`, `runtime.js`, `content.js` | Settings model, pure helpers, scheduler/context, entry point (page main world) |
-| `features/*.js` | One file per feature: cache, preload, toolbar, sound, layout, segments, pager, gestures, overview, keyboard |
-| `content.css` | All page styles |
-| `reload.js` | Service worker (update check) and the isolated-world bridge that mirrors settings into the page |
-| `popup.*` | Settings popup |
-| `INSTALL.html`, `install/`, `update.cmd` | Annotator guide and one-click updater, shipped in the zip |
+| `src/background.js` | Service worker for update checks and isolated-world bridge that mirrors settings into the page |
+| `src/shared/settings.js`, `src/shared/update.js` | Settings model and shared update logic |
+| `src/page/content.js`, `src/page/content.css`, `src/page/helpers.js`, `src/page/runtime.js` | Main-world entry point, styles, helpers and runtime |
+| `src/page/features/*.js` | Cache, preload, toolbar, sound, layout, segments, pager, gestures, overview and keyboard |
+| `src/popup/` | Settings popup HTML, JavaScript and CSS |
+| `docs/install.html`, `docs/images/screenshot.jpg` | Illustrated install guide and screenshot |
+| `icons/` | Extension and guide icons |
+| `update.cmd` | One-click updater included in the zip |
 | `scripts/` | Test runner, packager, icon generator |
 | `tests/` | Tests (plain Node + jsdom, with a fake Label Studio in `tests/test-support/`) |
+| `.github/workflows/` | CI and release workflows |
+| `package.json`, `package-lock.json`, `eslint.config.mjs` | npm commands, dependency lockfile and lint settings |
+| `.gitignore`, `.gitattributes` | Git ignore rules and file attributes |
 
 ### Releasing a new version
 

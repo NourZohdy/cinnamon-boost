@@ -3,13 +3,15 @@ import { readFileSync } from 'node:fs';
 import { setImmediate } from 'node:timers/promises';
 import vm from 'node:vm';
 import { JSDOM } from 'jsdom';
-import update from '../update.js';
+import update from '../src/shared/update.js';
 import { disableDevReload } from '../scripts/package.mjs';
 import { fakeLS } from './test-support/fake-ls.mjs';
 
 const { UPDATE_KEY, isNewer, releaseUrl } = update;
 const read = file => readFileSync(new URL('../' + file, import.meta.url), 'utf8');
-const current = JSON.parse(read('manifest.json')).version;
+const manifest = JSON.parse(read('manifest.json'));
+const current = manifest.version;
+const extensionRoot = 'chrome-extension://abcdefghijklmnopqrstuvwxyzabcdef/';
 const latest = '0.33.0';
 const releases = 'https://github.com/NourZohdy/ls-sound-only/releases/';
 const tagged = releases + 'tag/v' + latest;
@@ -39,9 +41,14 @@ function fakeWorker({ dev = false, stored } = {}) {
   const badge = [], fetches = [], colors = [], timeouts = [];
   let now = 0, reloads = 0, installed, startup;
   let reply = { tag_name: 'v' + latest, html_url: tagged };
-  const source = read('reload.js');
+  const source = read(manifest.background.service_worker);
+  const workerUrl = new URL(manifest.background.service_worker, extensionRoot);
   const context = vm.createContext({
-    importScripts: file => vm.runInContext(read(file), context),
+    importScripts(file) {
+      const url = new URL(file, workerUrl);
+      assert.equal(url.href, new URL('src/shared/update.js', extensionRoot).href);
+      vm.runInContext(read(url.pathname.slice(1)), context);
+    },
     URL,
     Date: { now: () => now },
     AbortSignal: { timeout: ms => timeouts.push(ms) },
@@ -175,7 +182,11 @@ for (const [layout, pagerEnabled] of [['compact', true], ['compact', false], ['o
   ls.dom.window.close();
 }
 
-const { window: popup } = new JSDOM(read('popup.html'), { runScripts: 'outside-only' });
+const popupUrl = new URL('../' + manifest.action.default_popup, import.meta.url);
+const { window: popup } = new JSDOM(readFileSync(popupUrl, 'utf8'), {
+  runScripts: 'outside-only',
+  url: popupUrl.href,
+});
 let next, onChanged, popupReloads = 0;
 popup.chrome = {
   runtime: {
@@ -191,7 +202,9 @@ popup.chrome = {
     onChanged: { addListener: fn => onChanged = fn },
   },
 };
-for (const script of popup.document.querySelectorAll('script[src]')) popup.eval(read(script.getAttribute('src')));
+for (const script of popup.document.querySelectorAll('script[src]')) {
+  popup.eval(readFileSync(new URL(script.src), 'utf8'));
+}
 await setImmediate();
 const byId = id => popup.document.getElementById(id);
 assert.equal(byId('update-banner').hidden, false);

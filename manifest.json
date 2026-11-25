@@ -13,7 +13,7 @@
                         "storage"
                     ],
     "action":  {
-                   "default_popup":  "popup.html",
+                   "default_popup":  "src/popup/popup.html",
                    "default_title":  "LS Sound only: settings",
                    "default_icon":  {
                                         "16":  "icons/icon16.png",
@@ -22,7 +22,7 @@
                                     }
                },
     "background":  {
-                       "service_worker":  "reload.js"
+                       "service_worker":  "src/background.js"
                    },
     "content_scripts":  [
                             {
@@ -30,21 +30,21 @@
                                                 "https://annotation.dlnlp.ai/*"
                                             ],
                                 "js":  [
-                                           "settings.js",
-                                           "update.js",
-                                           "helpers.js",
-                                           "runtime.js",
-                                           "features/cache.js",
-                                           "features/preload.js",
-                                           "features/toolbar.js",
-                                           "features/sound.js",
-                                           "features/layout.js",
-                                           "features/segments.js",
-                                           "features/pager.js",
-                                           "features/gestures.js",
-                                           "features/overview.js",
-                                           "features/keyboard.js",
-                                           "content.js"
+                                           "src/shared/settings.js",
+                                           "src/shared/update.js",
+                                           "src/page/helpers.js",
+                                           "src/page/runtime.js",
+                                           "src/page/features/cache.js",
+                                           "src/page/features/preload.js",
+                                           "src/page/features/toolbar.js",
+                                           "src/page/features/sound.js",
+                                           "src/page/features/layout.js",
+                                           "src/page/features/segments.js",
+                                           "src/page/features/pager.js",
+                                           "src/page/features/gestures.js",
+                                           "src/page/features/overview.js",
+                                           "src/page/features/keyboard.js",
+                                           "src/page/content.js"
                                        ],
                                 "world":  "MAIN",
                                 "run_at":  "document_start"
@@ -54,10 +54,10 @@
                                                 "https://annotation.dlnlp.ai/*"
                                             ],
                                 "js":  [
-                                           "reload.js"
+                                           "src/background.js"
                                        ],
                                 "css":  [
-                                            "content.css"
+                                            "src/page/content.css"
                                         ],
                                 "run_at":  "document_start"
                             }

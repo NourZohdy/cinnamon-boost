@@ -19,7 +19,7 @@ function requireFile(directory, file) {
 
 export function buildFileList(directory, manifest) {
   const action = manifest.action;
-  const files = new Set(['manifest.json', 'update.cmd', 'INSTALL.html', 'install/result.jpg', manifest.background?.service_worker, action?.default_popup,
+  const files = new Set(['manifest.json', 'update.cmd', 'docs/install.html', 'docs/images/screenshot.jpg', manifest.background?.service_worker, action?.default_popup,
     ...Object.values(manifest.icons ?? {}),
     ...(typeof action?.default_icon === 'string' ? [action.default_icon] : Object.values(action?.default_icon ?? {})),
     ...(manifest.content_scripts ?? []).flatMap(script => [...(script.js ?? []), ...(script.css ?? [])]),
@@ -43,7 +43,7 @@ export function buildFileList(directory, manifest) {
 
 export function disableDevReload(source) {
   const marker = 'const DEV = true;';
-  if (!source.includes(marker)) throw new Error(`reload.js is missing "${marker}"`);
+  if (!source.includes(marker)) throw new Error(`src/background.js is missing "${marker}"`);
   return source.replace(marker, 'const DEV = false;');
 }
 
@@ -51,7 +51,8 @@ function main() {
   const directory = realpathSync(root);
   const manifest = JSON.parse(readFileSync(join(directory, 'manifest.json'), 'utf8'));
   const files = buildFileList(directory, manifest);
-  const reload = disableDevReload(readFileSync(join(directory, 'reload.js'), 'utf8'));
+  const background = manifest.background.service_worker;
+  const releaseWorker = disableDevReload(readFileSync(join(directory, background), 'utf8'));
   const dist = join(directory, 'dist');
   const unpacked = join(dist, 'ls-sound-only');
   const zip = join(dist, zipName);
@@ -66,7 +67,7 @@ function main() {
     mkdirSync(dirname(dest), { recursive: true });
     copyFileSync(join(directory, file), dest);
   }
-  writeFileSync(join(unpacked, 'reload.js'), reload);
+  writeFileSync(join(unpacked, background), releaseWorker);
   rmSync(zip, { force: true });
   const tar = join(process.env.SystemRoot, 'System32', 'tar.exe');
   const result = spawnSync(tar, ['-a', '-c', '-f', zip, '-C', unpacked, '.'], { stdio: 'inherit' });

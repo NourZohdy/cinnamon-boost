@@ -2,8 +2,8 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
-const { segmentShortcut, submitDecision } = require('../content.js');
-const { DEFAULTS } = require('../settings.js');
+const { segmentShortcut, submitDecision } = require('../src/page/content.js');
+const { DEFAULTS } = require('../src/shared/settings.js');
 
 let n = 0;
 const test = (name, fn) => { fn(); n++; console.log('ok -', name); };

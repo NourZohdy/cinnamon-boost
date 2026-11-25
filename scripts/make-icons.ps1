@@ -2,9 +2,9 @@ $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 
 $root = Split-Path $PSScriptRoot -Parent
-$css = Get-Content -Raw (Join-Path $root 'popup.css')
+$css = Get-Content -Raw (Join-Path $root 'src/popup/popup.css')
 $accent = [regex]::Match($css, '--accent:\s*(#[0-9a-fA-F]{6})\b').Groups[1].Value
-if (!$accent) { throw 'Could not read the accent color from popup.css' }
+if (!$accent) { throw 'Could not read the accent color from src/popup/popup.css' }
 $icons = New-Item -ItemType Directory -Force (Join-Path $root 'icons')
 
 $background = [System.Drawing.Drawing2D.GraphicsPath]::new()
